@@ -25,6 +25,9 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  await supabase.auth.getUser()
+  // Use getClaims() in proxy context — validates JWT locally, no network call
+  // Do NOT use getSession() or getUser() here
+  await supabase.auth.getClaims()
+
   return supabaseResponse
 }
