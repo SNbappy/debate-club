@@ -1,38 +1,66 @@
 ﻿"use client"
 
+import { AnimatePresence, motion } from "motion/react"
 import { useEffect, useState } from "react"
-import { motion, AnimatePresence } from "motion/react"
 
-const slides = ["/images/hero/hero-1.jpg", "/images/hero/hero-2.jpg", "/images/hero/hero-3.jpg"]
+const slides = [
+  "/images/home/hero-1.jpg",
+  "/images/home/hero-2.jpg",
+  "/images/home/hero-3.jpg",
+]
 
 export function HeroSlider() {
   const [index, setIndex] = useState(0)
+
   useEffect(() => {
-    const t = setInterval(() => setIndex((i) => (i + 1) % slides.length), 5500)
-    return () => clearInterval(t)
+    const interval = window.setInterval(() => {
+      setIndex((current) => (current + 1) % slides.length)
+    }, 4500)
+
+    return () => window.clearInterval(interval)
   }, [])
+
   return (
-    <div className="absolute inset-0 bg-[#0F1E3D]">
-      <AnimatePresence>
-        <motion.div
-          key={index}
-          initial={{ opacity: 0, scale: 1.08 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ opacity: { duration: 1.4 }, scale: { duration: 7, ease: "linear" } }}
-          className="absolute inset-0"
-        >
-          <img src={slides[index]} alt="" className="w-full h-full object-cover"
-            onError={(e) => { (e.currentTarget as HTMLImageElement).style.visibility = "hidden" }} />
-        </motion.div>
-      </AnimatePresence>
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0F1E3D]/70 via-[#0F1E3D]/50 to-[#0F1E3D]/90" />
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+    <>
+      <div className="absolute inset-0 overflow-hidden" style={{ contain: "strict" }}>
+        <AnimatePresence initial={false} mode="popLayout">
+          <motion.div
+            key={slides[index]}
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.9, ease: "easeInOut" }}
+            style={{ willChange: "opacity" }}
+          >
+            <img
+              src={slides[index]}
+              alt="JUST Debate Club"
+              className="h-full w-full object-cover object-center sm:object-top"
+              style={{ willChange: "auto" }}
+              onError={(e) => {
+                ;(e.currentTarget as HTMLImageElement).src = "/images/home/hero-1.jpg"
+              }}
+            />
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_18%,rgba(255,255,255,0.10),transparent_26%),radial-gradient(circle_at_80%_22%,rgba(193,154,61,0.10),transparent_20%),radial-gradient(circle_at_50%_100%,rgba(15,30,61,0.55),transparent_40%)]" />
+
+      <div className="absolute bottom-7 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2">
         {slides.map((_, i) => (
-          <button key={i} onClick={() => setIndex(i)}
-            className={`h-1 rounded-full transition-all ${i === index ? "w-10 bg-[#C19A3D]" : "w-5 bg-white/40"}`} />
+          <button
+            key={i}
+            type="button"
+            aria-label={`Go to slide ${i + 1}`}
+            onClick={() => setIndex(i)}
+            className={`pointer-events-auto h-1.5 rounded-full transition-all duration-300 ${
+              i === index ? "w-10 bg-[#C19A3D]" : "w-5 bg-white/45 hover:bg-white/70"
+            }`}
+          />
         ))}
       </div>
-    </div>
+    </>
   )
 }

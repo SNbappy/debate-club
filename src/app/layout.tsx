@@ -1,31 +1,56 @@
-﻿import "./globals.css"
-import type { Metadata } from "next"
+﻿import type { Metadata } from "next"
+import { Cormorant_Garamond, Manrope } from "next/font/google"
+
+import "./globals.css"
 import { Toaster } from "@/components/ui/sonner"
-import { SiteNav } from "@/components/site-nav"
-import { SiteFooter } from "@/components/site-footer"
+import { AppShell } from "@/components/app-shell"
 import { createClient } from "@/lib/supabase/server"
+
+const bodyFont = Manrope({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+})
+
+const displayFont = Cormorant_Garamond({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+})
 
 export const metadata: Metadata = {
   title: "JUST Debate Club",
-  description: "Where ideas take stage. JUST Debate Club at Jashore University of Science and Technology.",
+  description: "Official website of JUST Debate Club",
 }
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   let profile = null
   if (user) {
-    const { data } = await supabase.from("profiles").select("full_name, slug, avatar_url").eq("id", user.id).single()
+    const { data } = await supabase
+      .from("profiles")
+      .select("id, full_name, slug, avatar_url, is_admin")
+      .eq("id", user.id)
+      .single()
     profile = data
   }
 
   return (
-    <html lang="en">
-      <body className="antialiased min-h-screen flex flex-col">
-        <SiteNav user={user} profile={profile} />
-        <main className="flex-1 pt-16">{children}</main>
-        <SiteFooter />
-        <Toaster />
+    <html lang="en" className={`${bodyFont.variable} ${displayFont.variable}`}>
+      <body className="min-h-screen overflow-x-hidden bg-white text-[#0F1E3D] antialiased">
+        <AppShell user={user} profile={profile}>
+          {children}
+        </AppShell>
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   )
