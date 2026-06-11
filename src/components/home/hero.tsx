@@ -19,14 +19,14 @@ export function Hero({ memberCount }: { memberCount: number }) {
   })
 
   return (
-    <section className="relative min-h-[82svh] overflow-hidden -mt-16 text-white sm:min-h-screen">
+    <section className="relative min-h-[92svh] overflow-hidden -mt-16 text-white sm:min-h-screen">
       <HeroSlider />
 
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,30,61,0.90)_0%,rgba(15,30,61,0.76)_28%,rgba(15,30,61,0.48)_56%,rgba(15,30,61,0.72)_100%)]" />
       <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#081126]/50 to-transparent sm:h-32" />
-      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0F1E3D] via-[#0F1E3D]/65 to-transparent sm:h-44" />
+      <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#0F1E3D] via-[#0F1E3D]/65 to-transparent sm:h-44" />
 
-      <div className="relative z-10 mx-auto flex min-h-[82svh] max-w-7xl items-center px-5 pt-24 pb-10 sm:min-h-screen sm:px-6 sm:pt-32 sm:pb-16 md:pt-36 md:pb-20">
+      <div className="relative z-10 mx-auto flex min-h-[92svh] max-w-7xl items-center px-5 pt-24 pb-12 sm:min-h-screen sm:px-6 sm:pt-32 sm:pb-16 md:pt-36 md:pb-20">
         <div className="w-full max-w-5xl">
           <motion.div {...fadeUp(0)}>
             <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-4 py-2 text-[10px] uppercase tracking-[0.24em] text-white/90 backdrop-blur-md sm:text-[11px] md:text-xs">
@@ -70,6 +70,40 @@ export function Hero({ memberCount }: { memberCount: number }) {
                   Meet our members
                 </Button>
               </Link>
+            </div>
+          </motion.div>
+
+          <motion.div {...fadeUp(0.58)}>
+            <div className="mt-7 grid gap-2.5 sm:hidden">
+              <div className="rounded-[1.15rem] border border-white/10 bg-white/7 px-4 py-3.5 backdrop-blur-md">
+                <div className="mb-1.5 flex items-center gap-2 text-[#C19A3D]">
+                  <Users className="size-3.5" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.22em]">Community</span>
+                </div>
+                <p className="text-sm leading-6 text-white/82">
+                  {safeMemberCount}+ verified members building articulate futures.
+                </p>
+              </div>
+
+              <div className="rounded-[1.15rem] border border-white/10 bg-white/7 px-4 py-3.5 backdrop-blur-md">
+                <div className="mb-1.5 flex items-center gap-2 text-[#C19A3D]">
+                  <Trophy className="size-3.5" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.22em]">Debate</span>
+                </div>
+                <p className="text-sm leading-6 text-white/82">
+                  Bangla and English formats with training and regular practice.
+                </p>
+              </div>
+
+              <div className="rounded-[1.15rem] border border-white/10 bg-white/7 px-4 py-3.5 backdrop-blur-md">
+                <div className="mb-1.5 flex items-center gap-2 text-[#C19A3D]">
+                  <Award className="size-3.5" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.22em]">Recognition</span>
+                </div>
+                <p className="text-sm leading-6 text-white/82">
+                  Certificates and publicly verifiable club achievements.
+                </p>
+              </div>
             </div>
           </motion.div>
 
