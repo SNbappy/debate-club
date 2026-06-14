@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { Award, Sparkles, Users } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Reveal } from "@/components/home/animations";
@@ -109,6 +109,7 @@ export default async function MembersPage() {
   const { data, error } = await supabase
     .from("profiles")
     .select("id, full_name, slug, avatar_url, role, exec_position, batch_year, department, bio")
+    .eq("is_verified", true)
     .order("exec_position", { ascending: true, nullsFirst: false })
     .order("full_name", { ascending: true });
 

@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useState, useTransition } from "react"
 import { updateProfile } from "@/lib/actions/profile"
@@ -14,6 +14,29 @@ import { CldUploadWidget } from "next-cloudinary"
 import { toast } from "sonner"
 import type { Profile } from "@/types/supabase"
 import { Upload, Trash2 } from "lucide-react"
+
+const CURRENT_YEAR = new Date().getFullYear()
+const START_YEAR = 2015
+
+function generateSessionOptions() {
+  const options: { value: string; label: string }[] = []
+  for (let year = CURRENT_YEAR + 1; year >= START_YEAR; year--) {
+    const shortNext = String(year + 1).slice(-2)
+    options.push({ value: String(year), label: `${year}-${shortNext}` })
+  }
+  return options
+}
+
+function generateYearOptions() {
+  const options: { value: string; label: string }[] = []
+  for (let year = CURRENT_YEAR + 1; year >= START_YEAR; year--) {
+    options.push({ value: String(year), label: String(year) })
+  }
+  return options
+}
+
+const SESSION_OPTIONS = generateSessionOptions()
+const YEAR_OPTIONS = generateYearOptions()
 
 export function ProfileForm({ profile }: { profile: Profile }) {
   const [isPending, startTransition] = useTransition()
@@ -92,8 +115,18 @@ export function ProfileForm({ profile }: { profile: Profile }) {
             </div>
             <div className="grid sm:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="batch_year">Batch year</Label>
-                <Input id="batch_year" name="batch_year" type="number" defaultValue={profile.batch_year ?? ""} placeholder="2024" />
+                <Label htmlFor="batch_year">Session</Label>
+                <Select name="batch_year" defaultValue={profile.batch_year ? String(profile.batch_year) : undefined}>
+                  <SelectTrigger id="batch_year">
+                    <SelectValue placeholder="Select session" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SESSION_OPTIONS.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">Your university admission session.</p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="department">Department</Label>
@@ -101,12 +134,17 @@ export function ProfileForm({ profile }: { profile: Profile }) {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="joined_year">Joined club</Label>
-                <Input id="joined_year" name="joined_year" type="number" defaultValue={profile.joined_year ?? ""} placeholder="2024" />
+                <Select name="joined_year" defaultValue={profile.joined_year ? String(profile.joined_year) : undefined}>
+                  <SelectTrigger id="joined_year">
+                    <SelectValue placeholder="Select year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {YEAR_OPTIONS.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="alumni_year">Alumni year (if applicable)</Label>
-              <Input id="alumni_year" name="alumni_year" type="number" defaultValue={profile.alumni_year ?? ""} placeholder="Leave blank if currently active" />
             </div>
           </CardContent>
         </Card>
@@ -180,5 +218,3 @@ export function ProfileForm({ profile }: { profile: Profile }) {
     </div>
   )
 }
-
-

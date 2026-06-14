@@ -13,7 +13,6 @@ const profileSchema = z.object({
   batch_year: z.number().int().min(1900).max(2100).optional(),
   department: z.string().max(100).optional(),
   joined_year: z.number().int().min(1900).max(2100).optional(),
-  alumni_year: z.number().int().min(1900).max(2100).optional(),
   phone: z.string().max(30).optional(),
   email_visibility: z.enum(["public", "members_only", "hidden"]),
   phone_visibility: z.enum(["public", "members_only", "hidden"]),
@@ -24,7 +23,7 @@ const profileSchema = z.object({
   social_website: z.string().url().optional(),
 })
 
-const YEAR_FIELDS = ["batch_year", "joined_year", "alumni_year"]
+const YEAR_FIELDS = ["batch_year", "joined_year"]
 
 function normalizeYear(v: string | undefined): number | undefined {
   if (!v) return undefined

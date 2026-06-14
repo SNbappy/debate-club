@@ -128,8 +128,8 @@ export default async function MemberProfilePage({
       : null,
     profile.batch_year
       ? {
-          label: "Batch",
-          value: String(profile.batch_year),
+          label: "Session",
+          value: `${profile.batch_year}-${String(profile.batch_year + 1).slice(-2)}`,
           icon: GraduationCap,
         }
       : null,
