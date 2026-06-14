@@ -144,7 +144,7 @@ export default async function EventDetailPage({
                 <Reveal delay={0.34}>
                   <div className="mt-8">
                     <a
-                      href={event.registration_url}
+                      href={event.registration_url ?? undefined}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 rounded-full bg-[#C19A3D] px-6 py-3 text-sm font-semibold text-black transition-all duration-300 hover:bg-[#D8B15A]"
@@ -183,7 +183,7 @@ export default async function EventDetailPage({
                   {normalizeText(event.registration_url) && !isPast ? (
                     <div className="mt-8 border-t border-[#0F1E3D]/10 pt-6">
                       <a
-                        href={event.registration_url}
+                        href={event.registration_url ?? undefined}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 rounded-full border border-[#C19A3D]/40 bg-[#FDF8EE] px-6 py-3 text-sm font-semibold text-[#0F1E3D] transition-all duration-300 hover:border-[#C19A3D] hover:bg-[#fffaf0]"

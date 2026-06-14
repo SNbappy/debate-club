@@ -59,7 +59,7 @@ async function getAlbumSlug(
   ctx: Awaited<ReturnType<typeof requireAdmin>>,
   albumId: string
 ) {
-  const { data } = await ctx.supabase
+  const { data } = await ctx.supabase!
     .from("gallery_albums")
     .select("slug")
     .eq("id", albumId)
@@ -72,7 +72,7 @@ async function getPhotoRecord(
   ctx: Awaited<ReturnType<typeof requireAdmin>>,
   photoId: string
 ) {
-  const { data } = await ctx.supabase
+  const { data } = await ctx.supabase!
     .from("gallery_images")
     .select("id, album_id, order_index")
     .eq("id", photoId)
@@ -92,7 +92,7 @@ async function normalizePhotoOrder(
   ctx: Awaited<ReturnType<typeof requireAdmin>>,
   albumId: string
 ) {
-  const { data: photos } = await ctx.supabase
+  const { data: photos } = await ctx.supabase!
     .from("gallery_images")
     .select("id")
     .eq("album_id", albumId)
@@ -102,7 +102,7 @@ async function normalizePhotoOrder(
   if (!photos?.length) return
 
   const updates = photos.map((photo, index) =>
-    ctx.supabase
+    ctx.supabase!
       .from("gallery_images")
       .update({ order_index: index })
       .eq("id", photo.id)

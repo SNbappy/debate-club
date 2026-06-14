@@ -1,4 +1,4 @@
-﻿"use server"
+"use server"
 
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
@@ -47,7 +47,7 @@ export async function createAchievement(formData: FormData): Promise<{ error?: s
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid input" }
 
   const { error } = await supabase.from("achievements").insert({
-    ...(toDb(parsed.data) as { title: string; category: "speaker_award" | "adjudication_award" | "team_result" | "training_conducted" | "other" }),
+    ...(toDb(parsed.data) as any),
     profile_id: user.id,
   })
   if (error) return { error: error.message }
@@ -66,7 +66,7 @@ export async function updateAchievement(id: string, formData: FormData): Promise
 
   const { error } = await supabase
     .from("achievements")
-    .update(toDb(parsed.data))
+    .update(toDb(parsed.data) as any)
     .eq("id", id)
     .eq("profile_id", user.id)
     .eq("is_verified", false)

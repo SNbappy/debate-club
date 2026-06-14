@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { motion, useReducedMotion } from "motion/react"
 import { useEffect, useRef, useState } from "react"
@@ -29,7 +29,7 @@ export function Reveal({
       transition={
         shouldReduceMotion
           ? { duration: 0 }
-          : { duration, delay, ease: "easeOut" }
+          : { duration, delay, ease: "easeOut" as const }
       }
     >
       {children}

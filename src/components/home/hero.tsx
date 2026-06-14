@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { motion, useReducedMotion } from "motion/react"
 import { ArrowRight, Award, Sparkles, Trophy, Users } from "lucide-react"
@@ -15,7 +15,7 @@ export function Hero({ memberCount }: { memberCount: number }) {
     animate: { opacity: 1, y: 0 },
     transition: shouldReduceMotion
       ? { duration: 0 }
-      : { duration: 0.42, delay, ease: "easeOut" },
+      : { duration: 0.42, delay, ease: "easeOut" as const },
   })
 
   return (

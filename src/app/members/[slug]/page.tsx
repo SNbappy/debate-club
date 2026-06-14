@@ -1,4 +1,4 @@
-﻿import Link from "next/link"
+import Link from "next/link"
 import { notFound } from "next/navigation"
 import {
   ArrowLeft,
@@ -180,7 +180,7 @@ export default async function MemberProfilePage({
                   <div className="aspect-[4/4.65] bg-[#102246]">
                     {normalizeText(profile.avatar_url) ? (
                       <img
-                        src={profile.avatar_url}
+                        src={profile.avatar_url ?? undefined}
                         alt={name}
                         className="h-full w-full object-cover object-top"
                       />
@@ -292,7 +292,7 @@ export default async function MemberProfilePage({
                       return (
                         <a
                           key={social.label}
-                          href={social.url}
+                          href={social.url ?? undefined}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-white/8 px-4 py-2.5 text-white/86 transition-all duration-300 hover:border-white/24 hover:bg-white/12 hover:text-white"

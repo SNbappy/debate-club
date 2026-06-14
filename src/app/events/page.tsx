@@ -245,7 +245,7 @@ export default async function EventsPage() {
           <div className="relative mx-auto max-w-6xl px-6">
             <Reveal>
               <div className="mb-10 grid gap-5 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
-                <div class="max-w-xl">
+                <div className="max-w-xl">
                   <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#C19A3D]">Upcoming events</div>
                   <h2 className="font-display text-[1.9rem] leading-[0.96] tracking-tight text-[#0F1E3D] sm:text-4xl md:text-5xl">
                     What is coming next.

@@ -9,7 +9,7 @@ type Message = {
   id: string
   name: string
   email: string
-  subject: string
+  subject: string | null
   message: string
   is_read: boolean
   created_at: string
@@ -30,6 +30,11 @@ function formatLongDate(value: string) {
     hour: "numeric",
     minute: "2-digit",
   }).format(new Date(value))
+}
+
+function getSubject(subject: string | null) {
+  const value = subject?.trim()
+  return value && value.length > 0 ? value : "No subject"
 }
 
 export default function ContactInboxClient({ messages: initial }: { messages: Message[] }) {
@@ -112,11 +117,10 @@ export default function ContactInboxClient({ messages: initial }: { messages: Me
               <button
                 key={f}
                 onClick={() => setFilter(f)}
-                className={`rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
-                  filter === f
+                className={`rounded-xl px-4 py-2 text-sm font-medium transition-colors ${filter === f
                     ? "bg-[#0F1E3D] text-white"
                     : "border border-[#0F1E3D]/15 bg-white text-[#0F1E3D] hover:border-[#C19A3D]/45"
-                }`}
+                  }`}
               >
                 {f === "all" ? `All (${messages.length})` : `Unread (${unreadCount})`}
               </button>
@@ -135,13 +139,12 @@ export default function ContactInboxClient({ messages: initial }: { messages: Me
               <button
                 key={msg.id}
                 onClick={() => openMessage(msg)}
-                className={`w-full rounded-[22px] border p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(15,30,61,0.08)] ${
-                  selected?.id === msg.id
+                className={`w-full rounded-[22px] border p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(15,30,61,0.08)] ${selected?.id === msg.id
                     ? "border-[#C19A3D] bg-[#FFF8E8]"
                     : msg.is_read
-                    ? "border-[#0F1E3D]/10 bg-white"
-                    : "border-[#0F1E3D]/18 bg-white"
-                }`}
+                      ? "border-[#0F1E3D]/10 bg-white"
+                      : "border-[#0F1E3D]/18 bg-white"
+                  }`}
               >
                 <div className="mb-1 flex items-start justify-between gap-2">
                   <div className="flex min-w-0 items-center gap-2">
@@ -152,9 +155,8 @@ export default function ContactInboxClient({ messages: initial }: { messages: Me
                       />
                     )}
                     <span
-                      className={`truncate text-sm text-[#0F1E3D] ${
-                        msg.is_read ? "font-medium" : "font-semibold"
-                      }`}
+                      className={`truncate text-sm text-[#0F1E3D] ${msg.is_read ? "font-medium" : "font-semibold"
+                        }`}
                     >
                       {msg.name}
                     </span>
@@ -166,7 +168,7 @@ export default function ContactInboxClient({ messages: initial }: { messages: Me
                 </div>
 
                 <p className="truncate text-sm font-medium text-[#0F1E3D]/82">
-                  {msg.subject}
+                  {getSubject(msg.subject)}
                 </p>
                 <p className="mt-0.5 truncate text-xs text-[#0F1E3D]/50">
                   {msg.message}
@@ -188,7 +190,7 @@ export default function ContactInboxClient({ messages: initial }: { messages: Me
             <div className="mb-5 flex items-start justify-between gap-4">
               <div>
                 <h2 className="mb-1 text-lg font-bold text-[#0F1E3D]">
-                  {selected.subject}
+                  {getSubject(selected.subject)}
                 </h2>
                 <p className="text-sm text-[#0F1E3D]/60">
                   From{" "}
@@ -232,7 +234,7 @@ export default function ContactInboxClient({ messages: initial }: { messages: Me
 
             <div className="mt-6 border-t border-[#0F1E3D]/10 pt-4">
               <a
-                href={`mailto:${selected.email}?subject=Re: ${encodeURIComponent(selected.subject)}`}
+                href={`mailto:${selected.email}?subject=Re: ${encodeURIComponent(getSubject(selected.subject))}`}
                 className="inline-flex items-center gap-2 rounded-lg bg-[#0F1E3D] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1a2e5a]"
               >
                 <Mail size={14} />

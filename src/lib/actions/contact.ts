@@ -1,4 +1,4 @@
-﻿"use server"
+"use server"
 
 import { createClient } from "@/lib/supabase/server"
 import { z } from "zod"
@@ -20,7 +20,7 @@ export async function submitContactMessage(formData: FormData) {
 
   const result = schema.safeParse(raw)
   if (!result.success) {
-    return { error: result.error.errors[0].message }
+    return { error: result.error.issues[0].message }
   }
 
   const supabase = await createClient()

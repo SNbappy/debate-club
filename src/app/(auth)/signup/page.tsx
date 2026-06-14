@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react"
 import Link from "next/link"
-import { ArrowLeft, ArrowRight, BadgeCheck, LockKeyhole, Mail, UserRound } from "lucide-react"
+import { ArrowLeft, BadgeCheck, LockKeyhole, Mail, UserRound } from "lucide-react"
 import { toast } from "sonner"
 
 import { signUp } from "@/lib/actions/auth"
@@ -13,9 +13,13 @@ import { Label } from "@/components/ui/label"
 export default function SignupPage() {
   const [isPending, startTransition] = useTransition()
   const [inlineError, setInlineError] = useState("")
+  const [successMessage, setSuccessMessage] = useState("")
+  const [requiresEmailConfirmation, setRequiresEmailConfirmation] = useState(false)
 
   function handleSubmit(formData: FormData) {
     setInlineError("")
+    setSuccessMessage("")
+    setRequiresEmailConfirmation(false)
 
     const password = String(formData.get("password") ?? "")
     const confirmPassword = String(formData.get("confirm_password") ?? "")
@@ -29,9 +33,17 @@ export default function SignupPage() {
 
     startTransition(async () => {
       const result = await signUp(formData)
+
       if (result?.error) {
         setInlineError(result.error)
         toast.error(result.error)
+        return
+      }
+
+      if (result?.success) {
+        setSuccessMessage(result.success)
+        setRequiresEmailConfirmation(Boolean(result.requiresEmailConfirmation))
+        toast.success(result.success)
       }
     })
   }
@@ -155,7 +167,8 @@ export default function SignupPage() {
                       id="email"
                       name="email"
                       type="email"
-                      placeholder="you@university.edu"
+                      placeholder="you@juniv.edu"
+                      autoComplete="email"
                       required
                       className="h-12 border-[#0F1E3D]/12 bg-white"
                     />
@@ -170,6 +183,7 @@ export default function SignupPage() {
                       name="password"
                       type="password"
                       minLength={8}
+                      autoComplete="new-password"
                       required
                       className="h-12 border-[#0F1E3D]/12 bg-white"
                     />
@@ -187,6 +201,7 @@ export default function SignupPage() {
                       name="confirm_password"
                       type="password"
                       minLength={8}
+                      autoComplete="new-password"
                       required
                       className="h-12 border-[#0F1E3D]/12 bg-white"
                     />
@@ -195,6 +210,17 @@ export default function SignupPage() {
                   {inlineError ? (
                     <div className="rounded-[1rem] border border-rose-200 bg-rose-50 px-4 py-3 text-sm leading-6 text-rose-700">
                       {inlineError}
+                    </div>
+                  ) : null}
+
+                  {successMessage ? (
+                    <div className="rounded-[1rem] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm leading-6 text-emerald-700">
+                      <p>{successMessage}</p>
+                      {requiresEmailConfirmation ? (
+                        <p className="mt-2 text-xs leading-5 text-emerald-700/80">
+                          After confirming your email, return to the sign in page and access your dashboard.
+                        </p>
+                      ) : null}
                     </div>
                   ) : null}
 
