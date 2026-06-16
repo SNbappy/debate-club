@@ -68,7 +68,7 @@ export function AdminShell({ children, user, profile }: AdminShellProps) {
     <div className="min-h-screen bg-[#F6F7FB] text-[#0F1E3D]">
       <div className="flex min-h-screen">
         {/* Desktop Sidebar */}
-        <aside className="fixed inset-y-0 left-0 z-40 hidden w-[290px] border-r border-[#0F1E3D]/8 bg-[linear-gradient(180deg,#081731_0%,#0D2244_55%,#14305B_100%)] text-white lg:flex lg:flex-col lg:overflow-y-auto">
+        <aside className="fixed inset-y-0 left-0 z-40 hidden w-[290px] border-r border-[#0F1E3D]/8 bg-[linear-gradient(180deg,#081731_0%,#0D2244_55%,#14305B_100%)] text-white lg:flex lg:flex-col lg:overflow-y-auto no-scrollbar">
           <div className="flex h-full flex-col p-5 sm:p-6">
             <Link
               href="/admin"
@@ -140,7 +140,7 @@ export function AdminShell({ children, user, profile }: AdminShellProps) {
           </header>
 
           <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
-            <div className="mx-auto w-full max-w-7xl">
+            <div className="w-full max-w-7xl">
               {children}
             </div>
           </main>

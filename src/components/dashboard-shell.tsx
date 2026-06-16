@@ -182,7 +182,7 @@ export function DashboardShell({
   return (
     <div className="min-h-screen bg-[#EEF2F6] text-[#0F1E3D]">
       <div className="flex min-h-screen">
-        <aside className="fixed inset-y-0 left-0 z-40 hidden w-[290px] border-r border-white/8 bg-[linear-gradient(180deg,#081731_0%,#0D2244_55%,#10284E_100%)] text-white lg:flex lg:flex-col lg:overflow-y-auto">
+        <aside className="fixed inset-y-0 left-0 z-40 hidden w-[290px] border-r border-white/8 bg-[linear-gradient(180deg,#081731_0%,#0D2244_55%,#10284E_100%)] text-white lg:flex lg:flex-col lg:overflow-y-auto no-scrollbar">
           <div className="flex h-full flex-col px-5 py-5">
             <Link href="/" className="flex items-center gap-3 rounded-2xl px-2 py-2">
               <div className="flex size-12 items-center justify-center rounded-2xl border border-white/12 bg-white/8 shadow-[0_10px_30px_rgba(8,17,38,0.22)] backdrop-blur-md">
@@ -269,7 +269,7 @@ export function DashboardShell({
           </header>
 
           <main className="flex-1 px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
-            <div className="mx-auto w-full max-w-7xl">
+            <div className="w-full max-w-7xl">
               <motion.div
                 key={pathname}
                 initial={{ opacity: 0, y: 30 }}
