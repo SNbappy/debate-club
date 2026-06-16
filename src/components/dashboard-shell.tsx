@@ -8,6 +8,7 @@ import {
   ArrowRight,
   Award,
   FileBadge2,
+  FileText,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -51,6 +52,7 @@ export function DashboardShell({
     const items = [
       { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
       { href: "/dashboard/profile", label: "Profile", icon: UserCircle2 },
+      { href: "/dashboard/posts", label: "My Posts", icon: FileText },
       { href: "/dashboard/achievements", label: "Achievements", icon: Award },
       { href: "/dashboard/certificates", label: "Certificates", icon: FileBadge2 },
     ]

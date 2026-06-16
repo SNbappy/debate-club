@@ -52,7 +52,7 @@ export function WelcomeSection() {
                     Our club stands for disciplined thought, respectful disagreement, and the courage to speak with reason. We invite every curious mind to grow with us through dialogue, competition, and shared learning.
                   </p>
                   <div className="mt-6 border-t border-[#0F1E3D]/10 pt-5">
-                    <div className="font-display text-2xl leading-none text-[#0F1E3D]">President Name</div>
+                    <div className="font-display text-2xl leading-none text-[#0F1E3D]">Mutaleb Hossain</div>
                     <div className="mt-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#0F1E3D]/55">
                       President, JUST Debate Club
                     </div>

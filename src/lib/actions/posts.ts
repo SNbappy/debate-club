@@ -21,9 +21,9 @@ async function requireAdmin() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: "Not authenticated" as const }
-  const { data: profile } = await supabase.from("profiles").select("is_admin").eq("id", user.id).single()
-  if (!profile?.is_admin) return { error: "Not authorized" as const }
-  return { supabase, userId: user.id }
+  const { data: profile } = await supabase.from("profiles").select("is_verified, is_admin").eq("id", user.id).single()
+  if (!profile?.is_verified && !profile?.is_admin) return { error: "Not authorized" as const }
+  return { supabase, userId: user.id, isAdmin: !!profile.is_admin }
 }
 
 function autoSlug(title: string): string {
@@ -72,7 +72,7 @@ export async function adminCreatePost(input: RawPostInput): Promise<{ error?: st
     if (error.code === "23505") return { error: "Slug already exists" }
     return { error: error.message }
   }
-  revalidatePath("/admin/posts"); revalidatePath("/posts")
+  revalidatePath("/admin/posts"); revalidatePath("/dashboard/posts"); revalidatePath("/posts")
   return { id: post?.id }
 }
 
@@ -82,7 +82,11 @@ export async function adminUpdatePost(id: string, input: RawPostInput): Promise<
   const parsed = postSchema.safeParse(normalize(input))
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid input" }
 
-  const { data: current } = await ctx.supabase.from("posts").select("is_published").eq("id", id).single()
+  const { data: current } = await ctx.supabase.from("posts").select("author_id, is_published").eq("id", id).single()
+  if (!ctx.isAdmin && current?.author_id !== ctx.userId) {
+    return { error: "Not authorized to update this post" }
+  }
+
   const updateData: UpdateTables<"posts"> = {
     title: parsed.data.title,
     slug: parsed.data.slug,
@@ -99,15 +103,20 @@ export async function adminUpdatePost(id: string, input: RawPostInput): Promise<
     if (error.code === "23505") return { error: "Slug already exists" }
     return { error: error.message }
   }
-  revalidatePath("/admin/posts"); revalidatePath("/posts"); revalidatePath(`/posts/${parsed.data.slug}`)
+  revalidatePath("/admin/posts"); revalidatePath("/dashboard/posts"); revalidatePath("/posts"); revalidatePath(`/posts/${parsed.data.slug}`)
   return {}
 }
 
 export async function adminDeletePost(id: string): Promise<{ error?: string }> {
   const ctx = await requireAdmin()
   if ("error" in ctx) return { error: ctx.error }
+  const { data: current } = await ctx.supabase.from("posts").select("author_id").eq("id", id).single()
+  if (!ctx.isAdmin && current?.author_id !== ctx.userId) {
+    return { error: "Not authorized to delete this post" }
+  }
+
   const { error } = await ctx.supabase.from("posts").delete().eq("id", id)
   if (error) return { error: error.message }
-  revalidatePath("/admin/posts"); revalidatePath("/posts")
+  revalidatePath("/admin/posts"); revalidatePath("/dashboard/posts"); revalidatePath("/posts")
   return {}
 }
