@@ -1,4 +1,4 @@
-﻿import { redirect } from "next/navigation"
+import { redirect } from "next/navigation"
 import { Download, ExternalLink, FileBadge2, Link2 } from "lucide-react"
 import Link from "next/link"
 
@@ -23,91 +23,47 @@ export default async function MyCertificatesPage() {
   const certs = certificates ?? []
 
   return (
-    <div className="space-y-6 lg:space-y-8">
-      <section className="rounded-[28px] border border-[#0F1E3D]/10 bg-[#FFFDF8] p-6 shadow-[0_18px_50px_rgba(15,30,61,0.08)] sm:p-7 lg:p-8">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
-              Member workspace
-            </p>
-            <h1 className="mt-3 font-display text-[2.15rem] leading-none text-[#0F1E3D] sm:text-[2.45rem]">
-              Certificates
-            </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-[#0F1E3D]/65">
-              Certificates issued to your account by the club. Each one carries a unique verification ID and a public verification link you can share freely.
-            </p>
-          </div>
-
-          {certs.length > 0 && (
-            <Badge className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-700 hover:bg-emerald-100">
-              <FileBadge2 className="mr-1.5 size-3.5" />
-              {certs.length} issued
-            </Badge>
-          )}
-        </div>
-
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
-          <div className="rounded-[22px] border border-[#0F1E3D]/8 bg-white p-5">
-            <p className="text-[11px] uppercase tracking-[0.2em] text-[#0F1E3D]/45">
-              Total issued
-            </p>
-            <div className="mt-3 flex items-end justify-between gap-3">
-              <div>
-                <div className="text-3xl font-semibold text-[#0F1E3D]">{certs.length}</div>
-                <p className="mt-1 text-sm text-[#0F1E3D]/58">Certificates on record</p>
-              </div>
-              <FileBadge2 className="size-5 text-[#C19A3D]" />
-            </div>
-          </div>
-
-          <div className="rounded-[22px] border border-[#0F1E3D]/8 bg-white p-5">
-            <p className="text-[11px] uppercase tracking-[0.2em] text-[#0F1E3D]/45">
-              Latest issued
-            </p>
-            <div className="mt-3 flex items-end justify-between gap-3">
-              <div>
-                <div className="text-sm font-medium text-[#0F1E3D]">
-                  {certs[0]?.issued_date ?? "—"}
-                </div>
-                <p className="mt-1 text-sm text-[#0F1E3D]/58">Most recent certificate date</p>
-              </div>
-              <Link2 className="size-5 text-[#C19A3D]" />
-            </div>
-          </div>
-
-          <div className="rounded-[22px] border border-[#0F1E3D]/8 bg-white p-5">
-            <p className="text-[11px] uppercase tracking-[0.2em] text-[#0F1E3D]/45">
-              Verification
-            </p>
-            <div className="mt-3 flex items-end justify-between gap-3">
-              <div>
-                <div className="text-sm font-medium text-[#0F1E3D]">Public links active</div>
-                <p className="mt-1 text-sm text-[#0F1E3D]/58">Each certificate is publicly verifiable</p>
-              </div>
-              <ExternalLink className="size-5 text-[#C19A3D]" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="rounded-[28px] border border-[#0F1E3D]/10 bg-[#FFFDF8] p-6 shadow-[0_16px_45px_rgba(15,30,61,0.08)] sm:p-7">
-        <div className="mb-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
-            Issued certificates
-          </p>
-          <h2 className="mt-2 text-[1.5rem] font-semibold leading-none text-[#0F1E3D]">
-            {certs.length === 0
-              ? "No certificates yet"
-              : `${certs.length} certificate${certs.length === 1 ? "" : "s"} issued to your account`}
+    <div className="space-y-6">
+      {/* Page Header */}
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h2 className="font-display text-3xl font-extrabold tracking-tight text-[#0F1E3D]">
+            My Certificates
           </h2>
+          <p className="mt-1.5 text-sm text-[#0F1E3D]/50 font-medium">
+            View and verify certificates issued to you by the club.
+          </p>
         </div>
 
+        {certs.length > 0 && (
+          <Badge className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-700 hover:bg-emerald-100">
+            <FileBadge2 className="mr-1.5 size-3.5" />
+            {certs.length} Issued
+          </Badge>
+        )}
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid gap-4 grid-cols-2 max-w-xl">
+        <div className="rounded-2xl border border-[#0F1E3D]/8 bg-white p-4 shadow-sm">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-[#0F1E3D]/40">Total Issued</p>
+          <p className="mt-1 text-2xl font-bold text-[#0F1E3D]">{certs.length}</p>
+        </div>
+        <div className="rounded-2xl border border-[#0F1E3D]/8 bg-white p-4 shadow-sm">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-[#0F1E3D]/40">Latest Issued</p>
+          <p className="mt-1 text-lg font-bold text-[#0F1E3D] truncate">
+            {certs[0]?.issued_date ?? "—"}
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-4xl pt-2">
         {certs.length === 0 ? (
           <div className="rounded-[22px] border border-dashed border-[#0F1E3D]/15 bg-white p-10 text-center">
             <FileBadge2 className="mx-auto mb-4 size-10 text-[#0F1E3D]/20" />
-            <p className="text-sm font-medium text-[#0F1E3D]/50">No certificates have been issued to your account yet.</p>
-            <p className="mt-2 text-sm text-[#0F1E3D]/38">
-              Certificates are issued by club admins after events, tournaments, or training sessions.
+            <p className="text-sm font-medium text-[#0F1E3D]/50">No certificates issued yet.</p>
+            <p className="mt-2 text-xs text-[#0F1E3D]/38">
+              Certificates are automatically added here after tournaments or club events.
             </p>
           </div>
         ) : (
@@ -171,7 +127,7 @@ export default async function MyCertificatesPage() {
             ))}
           </div>
         )}
-      </section>
+      </div>
     </div>
   )
 }
