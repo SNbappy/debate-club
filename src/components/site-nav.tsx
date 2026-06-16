@@ -119,7 +119,7 @@ export function SiteNav({
             </div>
           </Link>
 
-          <nav className="hidden items-center gap-1 md:flex">
+          <nav className="hidden items-center gap-1 lg:flex">
             {NAV.map((item) => {
               const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
               return (
@@ -144,7 +144,7 @@ export function SiteNav({
             })}
           </nav>
 
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="hidden items-center gap-3 lg:flex">
             {user ? (
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
@@ -239,7 +239,7 @@ export function SiteNav({
             type="button"
             onClick={() => setOpen((prev) => !prev)}
             aria-label={open ? "Close menu" : "Open menu"}
-            className={`relative z-[60] flex size-11 items-center justify-center rounded-full transition-colors duration-200 md:hidden ${
+            className={`relative z-[60] flex size-11 items-center justify-center rounded-full transition-colors duration-200 lg:hidden ${
               open
                 ? "bg-[#0F1E3D] text-white"
                 : transparent
@@ -261,7 +261,7 @@ export function SiteNav({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-40 bg-[#0F1E3D]/55 md:hidden"
+              className="fixed inset-0 z-40 bg-[#0F1E3D]/55 lg:hidden"
               onClick={() => setOpen(false)}
             />
 
@@ -271,7 +271,7 @@ export function SiteNav({
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed right-0 top-0 bottom-0 z-50 flex w-[84vw] max-w-[360px] flex-col bg-white shadow-[-12px_0_44px_rgba(15,30,61,0.18)] md:hidden"
+              className="fixed right-0 top-0 bottom-0 z-50 flex w-[84vw] max-w-[360px] flex-col bg-white shadow-[-12px_0_44px_rgba(15,30,61,0.18)] lg:hidden"
             >
               <div className="flex items-center justify-between border-b border-[#0F1E3D]/8 px-5 py-5">
                 <div className="flex items-center gap-2.5">
