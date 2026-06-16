@@ -3,7 +3,7 @@
 import { useMemo, useState, useTransition } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { ArrowLeft, ArrowRight, LockKeyhole, Mail, ShieldCheck } from "lucide-react"
+import { ArrowLeft, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react"
 import { toast } from "sonner"
 
 import { signIn } from "@/lib/actions/auth"
@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label"
 export default function LoginPage() {
   const [isPending, startTransition] = useTransition()
   const [inlineError, setInlineError] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
   const searchParams = useSearchParams()
 
   const redirectedFrom = searchParams.get("redirectedFrom")
@@ -35,165 +36,141 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#FDF8EE] text-[#0F1E3D]">
-      <section className="relative isolate min-h-screen overflow-hidden bg-[linear-gradient(180deg,#081731_0%,#0D2244_58%,#10284E_100%)] text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(193,154,61,0.16),transparent_18%),radial-gradient(circle_at_83%_20%,rgba(255,255,255,0.07),transparent_20%),radial-gradient(circle_at_50%_100%,rgba(8,17,38,0.58),transparent_42%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#FDF8EE] via-[#FDF8EE]/55 to-transparent" />
+    <main className="min-h-screen bg-[#FDF8EE] text-[#0F1E3D] flex">
+      {/* Left Column: Brand Info Sidebar (hidden on mobile/tablet) */}
+      <section className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 bg-[#081126] text-white relative overflow-hidden">
+        {/* Background Gradients */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(193,154,61,0.18),transparent_25%),radial-gradient(circle_at_80%_80%,rgba(255,255,255,0.06),transparent_20%)]" />
+        
+        {/* Top: Clean Logo */}
+        <Link href="/" className="relative z-10 flex items-center gap-3">
+          <img src="/logo.png" alt="JUST Debate Club" className="size-9 rounded-full" />
+          <div>
+            <div className="font-display font-bold text-sm tracking-tight text-white">JUST Debate Club</div>
+            <div className="text-[8px] uppercase tracking-[0.24em] text-white/50">JUSTDC</div>
+          </div>
+        </Link>
 
-        <header className="relative z-20">
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 sm:px-8 lg:px-10">
-            <Link
-              href="/"
-              className="inline-flex min-w-0 items-center gap-3 transition-opacity hover:opacity-90"
-            >
-              <div className="flex size-11 items-center justify-center rounded-2xl border border-white/12 bg-white/8 shadow-[0_10px_30px_rgba(8,17,38,0.22)] backdrop-blur-md">
-                <img
-                  src="/logo.png"
-                  alt="JUST Debate Club"
-                  className="h-7 w-7 object-contain"
+        {/* Center: Headline & Subtext */}
+        <div className="relative z-10 max-w-md">
+          <h1 className="font-display text-4xl sm:text-5xl font-bold leading-[1.05] tracking-tight text-white mb-6">
+            Where ideas take <span className="italic text-[#C19A3D]">stage</span>.
+          </h1>
+          <p className="text-white/76 leading-relaxed">
+            Cultivating Bangladesh&apos;s sharpest student voices through structured debate, public speaking, and critical reasoning.
+          </p>
+        </div>
+
+        {/* Bottom: Muted Footer info */}
+        <div className="relative z-10 text-xs text-white/40 font-medium">
+          &copy; {new Date().getFullYear()} JUST Debate Club. Protected workspace.
+        </div>
+      </section>
+
+      {/* Right Column: Clean Sign-in Form (full width on mobile) */}
+      <section className="flex-1 flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-16 bg-[#FDF8EE] relative">
+        <div className="w-full max-w-[380px] mx-auto">
+          {/* Logo at the top for mobile viewports */}
+          <div className="lg:hidden flex items-center gap-3 mb-8">
+            <img src="/logo.png" alt="JUST Debate Club" className="size-9 rounded-full" />
+            <div>
+              <div className="font-display font-bold text-sm tracking-tight text-[#0F1E3D]">JUST Debate Club</div>
+              <div className="text-[8px] uppercase tracking-[0.24em] text-[#0F1E3D]/50">JUSTDC</div>
+            </div>
+          </div>
+
+          <div className="mb-8">
+            <h2 className="font-display text-3xl font-bold text-[#0F1E3D] tracking-tight">
+              Welcome back
+            </h2>
+            <p className="mt-2 text-sm text-[#0F1E3D]/60">
+              {helperText}
+            </p>
+          </div>
+
+          <form action={handleSubmit} className="space-y-5">
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-sm font-medium text-[#0F1E3D]/80">
+                Email address
+              </Label>
+              <div className="relative flex items-center">
+                <Mail className="absolute left-4 size-4.5 text-[#0F1E3D]/40 pointer-events-none" />
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@university.edu"
+                  required
+                  className="h-12 pl-11 pr-4 border-[#0F1E3D]/12 bg-[#EEF2F6] text-[#0F1E3D] placeholder:text-[#0F1E3D]/40 rounded-xl focus-visible:ring-[#C19A3D]/30 focus-visible:border-[#C19A3D] transition-all"
                 />
               </div>
+            </div>
 
-              <div className="min-w-0 leading-tight">
-                <div className="truncate font-display text-[1.05rem] font-semibold tracking-tight text-white">
-                  JUST Debate Club
-                </div>
-                <div className="truncate text-[10px] uppercase tracking-[0.24em] text-white/58">
-                  Protected workspace
-                </div>
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password" className="text-sm font-medium text-[#0F1E3D]/80">
+                  Password
+                </Label>
+                <Link
+                  href="/forgot-password"
+                  className="text-xs font-semibold text-[#C19A3D] hover:underline"
+                >
+                  Forgot password?
+                </Link>
               </div>
-            </Link>
+              <div className="relative flex items-center">
+                <LockKeyhole className="absolute left-4 size-4.5 text-[#0F1E3D]/40 pointer-events-none" />
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  className="h-12 pl-11 pr-11 border-[#0F1E3D]/12 bg-[#EEF2F6] text-[#0F1E3D] placeholder:text-[#0F1E3D]/40 rounded-xl focus-visible:ring-[#C19A3D]/30 focus-visible:border-[#C19A3D] transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(prev => !prev)}
+                  className="absolute right-4 text-[#0F1E3D]/40 hover:text-[#0F1E3D] transition-colors focus:outline-none"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="size-4.5" /> : <Eye className="size-4.5" />}
+                </button>
+              </div>
+            </div>
 
+            {inlineError ? (
+              <div className="rounded-[1rem] border border-rose-200 bg-rose-50 px-4 py-3 text-sm leading-6 text-rose-700">
+                {inlineError}
+              </div>
+            ) : null}
+
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="h-12 w-full bg-[#0F1E3D] text-white hover:bg-[#132955] rounded-xl text-sm font-semibold shadow-md"
+            >
+              {isPending ? "Signing in..." : "Sign in →"}
+            </Button>
+          </form>
+
+          <p className="mt-8 text-center text-sm text-[#0F1E3D]/62">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/signup"
+              className="font-semibold text-[#C19A3D] hover:underline"
+            >
+              Sign up
+            </Link>
+          </p>
+
+          <div className="mt-12 text-center">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-xs font-medium text-white/86 backdrop-blur-md transition-all hover:bg-white/12 hover:text-white"
+              className="inline-flex items-center gap-2 text-xs font-semibold text-[#0F1E3D]/50 hover:text-[#0F1E3D] transition-colors"
             >
               <ArrowLeft className="size-3.5" />
               Back to home
             </Link>
-          </div>
-        </header>
-
-        <div className="relative z-10 mx-auto flex max-w-7xl px-6 pb-16 pt-4 sm:px-8 sm:pb-20 sm:pt-6 lg:px-10 lg:pb-24 lg:pt-8">
-          <div className="grid w-full items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
-            <div className="hidden lg:flex flex-col justify-center text-white">
-              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/82 backdrop-blur-md">
-                <ShieldCheck className="size-3.5 text-[#C19A3D]" />
-                Member access
-              </div>
-
-              <h1 className="mt-6 max-w-[11ch] font-display text-[2.9rem] leading-[0.92] tracking-[-0.04em] text-white sm:max-w-[10ch] sm:text-[3.5rem] lg:text-[4.5rem]">
-                Welcome back to the club workspace.
-              </h1>
-
-              <p className="mt-5 max-w-xl text-[1rem] leading-8 text-white/78 sm:text-[1.02rem]">
-                Manage events, members, posts, gallery content, and club operations from one protected dashboard built for JUST Debate Club.
-              </p>
-
-              <div className="mt-8 grid gap-4 sm:grid-cols-3">
-                <div className="rounded-[1.25rem] border border-white/10 bg-white/8 p-4 backdrop-blur-md">
-                  <Mail className="size-4 text-[#C19A3D]" />
-                  <p className="mt-3 text-sm font-medium text-white">Secure sign in</p>
-                  <p className="mt-1 text-xs leading-6 text-white/68">
-                    Access your role-based workspace safely.
-                  </p>
-                </div>
-
-                <div className="rounded-[1.25rem] border border-white/10 bg-white/8 p-4 backdrop-blur-md">
-                  <LockKeyhole className="size-4 text-[#C19A3D]" />
-                  <p className="mt-3 text-sm font-medium text-white">Protected routes</p>
-                  <p className="mt-1 text-xs leading-6 text-white/68">
-                    Only authenticated users can enter dashboard areas.
-                  </p>
-                </div>
-
-                <div className="rounded-[1.25rem] border border-white/10 bg-white/8 p-4 backdrop-blur-md">
-                  <ArrowRight className="size-4 text-[#C19A3D]" />
-                  <p className="mt-3 text-sm font-medium text-white">Fast continuation</p>
-                  <p className="mt-1 text-xs leading-6 text-white/68">
-                    Return directly to the page you were trying to access.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center lg:justify-end">
-              <div className="w-full max-w-md rounded-[1.75rem] border border-[#0F1E3D]/10 bg-[#FFFDF8] p-6 text-[#0F1E3D] shadow-[0_24px_70px_rgba(15,30,61,0.12)] sm:p-8">
-                <div className="mb-6">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
-                    Sign in
-                  </p>
-                  <h2 className="mt-3 font-display text-[2rem] leading-none text-[#0F1E3D]">
-                    Access dashboard
-                  </h2>
-                  <p className="mt-3 text-sm leading-7 text-[#0F1E3D]/68">
-                    {helperText}
-                  </p>
-                </div>
-
-                <form action={handleSubmit} className="space-y-5">
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-[#0F1E3D]">
-                      Email address
-                    </Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      placeholder="you@university.edu"
-                      required
-                      className="h-12 border-[#0F1E3D]/12 bg-white"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between gap-3">
-                      <Label htmlFor="password" className="text-[#0F1E3D]">
-                        Password
-                      </Label>
-                      <Link
-                        href="/forgot-password"
-                        className="text-xs font-medium text-[#C19A3D] transition-colors hover:text-[#A37D22] hover:underline"
-                      >
-                        Forgot password?
-                      </Link>
-                    </div>
-
-                    <Input
-                      id="password"
-                      name="password"
-                      type="password"
-                      required
-                      className="h-12 border-[#0F1E3D]/12 bg-white"
-                    />
-                  </div>
-
-                  {inlineError ? (
-                    <div className="rounded-[1rem] border border-rose-200 bg-rose-50 px-4 py-3 text-sm leading-6 text-rose-700">
-                      {inlineError}
-                    </div>
-                  ) : null}
-
-                  <Button
-                    type="submit"
-                    disabled={isPending}
-                    className="h-12 w-full bg-[#0F1E3D] text-white hover:bg-[#132955]"
-                  >
-                    {isPending ? "Signing in..." : "Sign in"}
-                  </Button>
-                </form>
-
-                <p className="mt-6 text-center text-sm text-[#0F1E3D]/62">
-                  Don&apos;t have an account?{" "}
-                  <Link
-                    href="/signup"
-                    className="font-medium text-[#0F1E3D] underline-offset-4 hover:underline"
-                  >
-                    Sign up
-                  </Link>
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
