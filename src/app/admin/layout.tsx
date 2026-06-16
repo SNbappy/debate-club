@@ -1,4 +1,4 @@
-﻿import Link from "next/link"
+import Link from "next/link"
 import { redirect } from "next/navigation"
 import { Shield } from "lucide-react"
 
@@ -29,7 +29,7 @@ export default async function AdminLayout({
   return (
     <div className="min-h-screen bg-[#F6F7FB]">
       <div className="flex min-h-screen flex-col lg:grid lg:grid-cols-[290px_minmax(0,1fr)]">
-        <aside className="border-b border-[#0F1E3D]/8 bg-[linear-gradient(180deg,#081731_0%,#0D2244_55%,#14305B_100%)] text-white lg:min-h-screen lg:border-b-0 lg:border-r">
+        <aside className="border-b border-[#0F1E3D]/8 bg-[linear-gradient(180deg,#081731_0%,#0D2244_55%,#14305B_100%)] text-white lg:sticky lg:top-0 lg:h-screen lg:border-b-0 lg:border-r lg:overflow-y-auto">
           <div className="flex h-full flex-col p-5 sm:p-6">
             <Link
               href="/admin"

@@ -1,4 +1,4 @@
-﻿import Link from "next/link"
+import Link from "next/link"
 import { ArrowRight, Award, Calendar, CheckCircle2, FileText, Images, Mail, Shield, Trophy, Users } from "lucide-react"
 
 import { createClient } from "@/lib/supabase/server"
@@ -29,193 +29,207 @@ export default async function AdminOverviewPage() {
   ])
 
   return (
-    <div className="space-y-6 lg:space-y-8">
-      <section className="rounded-[28px] border border-[#0F1E3D]/10 bg-[linear-gradient(135deg,#081731_0%,#0D2244_50%,#14305B_100%)] p-6 text-white shadow-[0_24px_70px_rgba(8,17,38,0.18)] sm:p-7 lg:p-8">
-        <div className="flex flex-wrap items-start justify-between gap-4">
+    <div className="space-y-8">
+      {/* Welcome Header */}
+      <div>
+        <h2 className="font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-[#0F1E3D]">
+          Admin Panel
+        </h2>
+        <p className="mt-1.5 text-sm text-[#0F1E3D]/50 font-medium">
+          Review registrations, verify achievements, and manage club content.
+        </p>
+      </div>
+
+      {/* Stats Grid */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Pending Members Card */}
+        <div className="rounded-2xl border border-[#0F1E3D]/8 bg-white p-5 shadow-sm transition-all hover:shadow-md">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-[#0F1E3D]/40">Pending Members</p>
+          <div className="mt-3 flex items-center justify-between">
+            <span className="text-2xl font-bold text-[#0F1E3D]">{pendingMembers ?? 0}</span>
+            <Users className="size-5 text-[#C19A3D]" />
+          </div>
+        </div>
+
+        {/* Pending Achievements Card */}
+        <div className="rounded-2xl border border-[#0F1E3D]/8 bg-white p-5 shadow-sm transition-all hover:shadow-md">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-[#0F1E3D]/40">Pending Achievements</p>
+          <div className="mt-3 flex items-center justify-between">
+            <span className="text-2xl font-bold text-[#0F1E3D]">{pendingAchievements ?? 0}</span>
+            <Trophy className="size-5 text-[#C19A3D]" />
+          </div>
+        </div>
+
+        {/* Total Members Card */}
+        <div className="rounded-2xl border border-[#0F1E3D]/8 bg-white p-5 shadow-sm transition-all hover:shadow-md">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-[#0F1E3D]/40">Total Members</p>
+          <div className="mt-3 flex items-center justify-between">
+            <span className="text-2xl font-bold text-[#0F1E3D]">{totalMembers ?? 0}</span>
+            <Shield className="size-5 text-[#C19A3D]" />
+          </div>
+        </div>
+
+        {/* Total Certificates Card */}
+        <div className="rounded-2xl border border-[#0F1E3D]/8 bg-white p-5 shadow-sm transition-all hover:shadow-md">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-[#0F1E3D]/40">Total Certificates</p>
+          <div className="mt-3 flex items-center justify-between">
+            <span className="text-2xl font-bold text-[#0F1E3D]">{totalCertificates ?? 0}</span>
+            <Award className="size-5 text-[#C19A3D]" />
+          </div>
+        </div>
+      </div>
+
+      {/* Action Cards Grid */}
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* Manage Members */}
+        <Link
+          href="/admin/members"
+          className="group flex flex-col justify-between rounded-3xl border border-[#0F1E3D]/8 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#C19A3D]/40 hover:shadow-md"
+        >
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
-              Admin workspace
-            </p>
-            <h1 className="mt-3 font-display text-[2.2rem] leading-none text-white sm:text-[2.55rem]">
-              Overview
-            </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-white/72">
-              Review members, approve achievements, manage club content, issue certificates, and keep the debate club workspace organized from one place.
+            <div className="flex size-12 items-center justify-center rounded-2xl bg-[#C19A3D]/10 text-[#C19A3D]">
+              <Users className="size-6" />
+            </div>
+            <h3 className="mt-5 font-display text-xl font-bold text-[#0F1E3D]">
+              Manage Members
+            </h3>
+            <p className="mt-2 text-sm text-[#0F1E3D]/50 leading-relaxed">
+              Approve pending registration requests, edit profiles, or adjust roles.
             </p>
           </div>
+          <div className="mt-6 flex items-center justify-between border-t border-[#0F1E3D]/5 pt-4">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#C19A3D]">
+              {pendingMembers && pendingMembers > 0 ? `${pendingMembers} pending approvals` : "All approvals done"}
+            </span>
+            <ArrowRight className="size-4 text-[#0F1E3D]/40 transition-transform group-hover:translate-x-1" />
+          </div>
+        </Link>
 
-          <div className="flex flex-wrap gap-2">
-            {(pendingMembers ?? 0) > 0 && (
-              <Badge className="rounded-full bg-amber-100 px-3 py-1 text-amber-800 hover:bg-amber-100">
-                {pendingMembers} pending members
-              </Badge>
-            )}
-            {(pendingAchievements ?? 0) > 0 && (
-              <Badge className="rounded-full bg-white/10 px-3 py-1 text-white hover:bg-white/10">
-                {pendingAchievements} pending achievements
-              </Badge>
-            )}
+        {/* Review Achievements */}
+        <Link
+          href="/admin/achievements"
+          className="group flex flex-col justify-between rounded-3xl border border-[#0F1E3D]/8 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#C19A3D]/40 hover:shadow-md"
+        >
+          <div>
+            <div className="flex size-12 items-center justify-center rounded-2xl bg-[#C19A3D]/10 text-[#C19A3D]">
+              <Trophy className="size-6" />
+            </div>
+            <h3 className="mt-5 font-display text-xl font-bold text-[#0F1E3D]">
+              Review Achievements
+            </h3>
+            <p className="mt-2 text-sm text-[#0F1E3D]/50 leading-relaxed">
+              Verify tournament wins, speaker rankings, or certifications submitted by club members.
+            </p>
+          </div>
+          <div className="mt-6 flex items-center justify-between border-t border-[#0F1E3D]/5 pt-4">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#C19A3D]">
+              {pendingAchievements && pendingAchievements > 0 ? `${pendingAchievements} pending approvals` : "All approvals done"}
+            </span>
+            <ArrowRight className="size-4 text-[#0F1E3D]/40 transition-transform group-hover:translate-x-1" />
+          </div>
+        </Link>
+
+        {/* Issue Certificates */}
+        <Link
+          href="/admin/certificates"
+          className="group flex flex-col justify-between rounded-3xl border border-[#0F1E3D]/8 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#C19A3D]/40 hover:shadow-md"
+        >
+          <div>
+            <div className="flex size-12 items-center justify-center rounded-2xl bg-[#C19A3D]/10 text-[#C19A3D]">
+              <Award className="size-6" />
+            </div>
+            <h3 className="mt-5 font-display text-xl font-bold text-[#0F1E3D]">
+              Issue Certificates
+            </h3>
+            <p className="mt-2 text-sm text-[#0F1E3D]/50 leading-relaxed">
+              Distribute digital credentials and maintain club certification records.
+            </p>
+          </div>
+          <div className="mt-6 flex items-center justify-between border-t border-[#0F1E3D]/5 pt-4">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#C19A3D]">
+              Open certificates workspace
+            </span>
+            <ArrowRight className="size-4 text-[#0F1E3D]/40 transition-transform group-hover:translate-x-1" />
+          </div>
+        </Link>
+
+        {/* Open Inbox */}
+        <Link
+          href="/admin/contact"
+          className="group flex flex-col justify-between rounded-3xl border border-[#0F1E3D]/8 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#C19A3D]/40 hover:shadow-md"
+        >
+          <div>
+            <div className="flex size-12 items-center justify-center rounded-2xl bg-[#C19A3D]/10 text-[#C19A3D]">
+              <Mail className="size-6" />
+            </div>
+            <h3 className="mt-5 font-display text-xl font-bold text-[#0F1E3D]">
+              Inbox Messages
+            </h3>
+            <p className="mt-2 text-sm text-[#0F1E3D]/50 leading-relaxed">
+              View and respond to inquiries submitted through the contact page.
+            </p>
+          </div>
+          <div className="mt-6 flex items-center justify-between border-t border-[#0F1E3D]/5 pt-4">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#C19A3D]">
+              {totalMessages ?? 0} messages total
+            </span>
+            <ArrowRight className="size-4 text-[#0F1E3D]/40 transition-transform group-hover:translate-x-1" />
+          </div>
+        </Link>
+
+        {/* Content Management Card */}
+        <div className="rounded-3xl border border-[#0F1E3D]/8 bg-white p-6 shadow-sm md:col-span-2">
+          <div className="flex items-center justify-between">
+            <h3 className="font-display text-xl font-bold text-[#0F1E3D]">
+              Content Management
+            </h3>
+          </div>
+          <p className="mt-2 text-sm text-[#0F1E3D]/50">
+            Select a category shortcut below to manage site posts, schedule upcoming events, or add gallery media albums.
+          </p>
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+            <Link
+              href="/admin/posts"
+              className="group flex flex-col justify-between rounded-2xl border border-[#0F1E3D]/8 bg-white/50 p-4 transition-all hover:border-[#C19A3D]/40 hover:shadow-sm"
+            >
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#0F1E3D]/40">Posts</span>
+                <p className="mt-2 text-2xl font-bold text-[#0F1E3D]">{totalPosts ?? 0}</p>
+              </div>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-[#C19A3D] group-hover:translate-x-0.5 transition-transform">
+                Manage Posts →
+              </span>
+            </Link>
+
+            <Link
+              href="/admin/events"
+              className="group flex flex-col justify-between rounded-2xl border border-[#0F1E3D]/8 bg-white/50 p-4 transition-all hover:border-[#C19A3D]/40 hover:shadow-sm"
+            >
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#0F1E3D]/40">Events</span>
+                <p className="mt-2 text-2xl font-bold text-[#0F1E3D]">{totalEvents ?? 0}</p>
+              </div>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-[#C19A3D] group-hover:translate-x-0.5 transition-transform">
+                Manage Events →
+              </span>
+            </Link>
+
+            <Link
+              href="/admin/gallery"
+              className="group flex flex-col justify-between rounded-2xl border border-[#0F1E3D]/8 bg-white/50 p-4 transition-all hover:border-[#C19A3D]/40 hover:shadow-sm"
+            >
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#0F1E3D]/40">Albums</span>
+                <p className="mt-2 text-2xl font-bold text-[#0F1E3D]">{totalGalleryAlbums ?? 0}</p>
+              </div>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-[#C19A3D] group-hover:translate-x-0.5 transition-transform">
+                Manage Gallery →
+              </span>
+            </Link>
           </div>
         </div>
-
-        <div className="mt-6 grid gap-4 md:grid-cols-4">
-          <div className="rounded-[22px] border border-white/10 bg-white/8 p-5 backdrop-blur-md">
-            <p className="text-[11px] uppercase tracking-[0.2em] text-white/46">
-              Members
-            </p>
-            <div className="mt-3 flex items-end justify-between gap-3">
-              <div>
-                <div className="text-3xl font-semibold text-white">{totalMembers ?? 0}</div>
-                <p className="mt-1 text-sm text-white/68">Registered accounts</p>
-              </div>
-              <Users className="size-5 text-[#C19A3D]" />
-            </div>
-          </div>
-
-          <div className="rounded-[22px] border border-white/10 bg-white/8 p-5 backdrop-blur-md">
-            <p className="text-[11px] uppercase tracking-[0.2em] text-white/46">
-              Review queue
-            </p>
-            <div className="mt-3 flex items-end justify-between gap-3">
-              <div>
-                <div className="text-3xl font-semibold text-white">{pendingMembers ?? 0}</div>
-                <p className="mt-1 text-sm text-white/68">Pending member approval</p>
-              </div>
-              <Shield className="size-5 text-[#C19A3D]" />
-            </div>
-          </div>
-
-          <div className="rounded-[22px] border border-white/10 bg-white/8 p-5 backdrop-blur-md">
-            <p className="text-[11px] uppercase tracking-[0.2em] text-white/46">
-              Achievement queue
-            </p>
-            <div className="mt-3 flex items-end justify-between gap-3">
-              <div>
-                <div className="text-3xl font-semibold text-white">{pendingAchievements ?? 0}</div>
-                <p className="mt-1 text-sm text-white/68">Awaiting review</p>
-              </div>
-              <Trophy className="size-5 text-[#C19A3D]" />
-            </div>
-          </div>
-
-          <div className="rounded-[22px] border border-white/10 bg-white/8 p-5 backdrop-blur-md">
-            <p className="text-[11px] uppercase tracking-[0.2em] text-white/46">
-              Certificates
-            </p>
-            <div className="mt-3 flex items-end justify-between gap-3">
-              <div>
-                <div className="text-3xl font-semibold text-white">{totalCertificates ?? 0}</div>
-                <p className="mt-1 text-sm text-white/68">Issued so far</p>
-              </div>
-              <Award className="size-5 text-[#C19A3D]" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
-        <div className="rounded-[28px] border border-[#0F1E3D]/10 bg-[#FFFDF8] p-6 shadow-[0_16px_45px_rgba(15,30,61,0.08)] sm:p-7">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
-                Priority actions
-              </p>
-              <h2 className="mt-3 text-[1.7rem] font-semibold leading-none text-[#0F1E3D]">
-                Review and publish
-              </h2>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-[#0F1E3D]/65">
-                Keep member records accurate, review submitted achievements, and maintain the public-facing content library of the club.
-              </p>
-            </div>
-
-            {((pendingMembers ?? 0) + (pendingAchievements ?? 0)) > 0 && (
-              <Badge
-                variant="outline"
-                className="rounded-full border-amber-300 bg-amber-50 px-3 py-1 text-amber-700"
-              >
-                {(pendingMembers ?? 0) + (pendingAchievements ?? 0)} items need attention
-              </Badge>
-            )}
-          </div>
-
-          <div className="mt-6 space-y-4">
-            <QuickActionCard
-              href="/admin/members"
-              icon={Users}
-              title="Manage members"
-              description="Approve new signups, review account status, and grant admin access where needed."
-              meta={`${pendingMembers ?? 0} pending`}
-            />
-            <QuickActionCard
-              href="/admin/achievements"
-              icon={Trophy}
-              title="Review achievements"
-              description="Approve or reject member-submitted results before they become visible publicly."
-              meta={`${pendingAchievements ?? 0} pending`}
-            />
-            <QuickActionCard
-              href="/admin/certificates"
-              icon={Award}
-              title="Issue certificates"
-              description="Create certificate records, distribute links, and maintain verification-ready records."
-              meta={`${totalCertificates ?? 0} issued`}
-            />
-            <QuickActionCard
-              href="/admin/contact"
-              icon={Mail}
-              title="Open inbox"
-              description="Review incoming contact messages and respond to public or member enquiries."
-              meta={`${totalMessages ?? 0} messages`}
-            />
-          </div>
-        </div>
-
-        <div className="space-y-6">
-          <div className="rounded-[28px] border border-[#0F1E3D]/10 bg-[#FFFDF8] p-6 shadow-[0_16px_45px_rgba(15,30,61,0.08)] sm:p-7">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
-              Content status
-            </p>
-            <div className="mt-5 space-y-3">
-              <StatusRow label="Posts" value={totalPosts ?? 0} icon={FileText} />
-              <StatusRow label="Events" value={totalEvents ?? 0} icon={Calendar} />
-              <StatusRow label="Gallery albums" value={totalGalleryAlbums ?? 0} icon={Images} />
-              <StatusRow label="Certificates" value={totalCertificates ?? 0} icon={Award} />
-            </div>
-          </div>
-
-          <div className="rounded-[28px] border border-[#0F1E3D]/10 bg-[#FFFDF8] p-6 shadow-[0_16px_45px_rgba(15,30,61,0.08)] sm:p-7">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
-              Shortcuts
-            </p>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <Link href="/admin/posts">
-                <Button variant="outline" className="border-[#0F1E3D]/12">
-                  Manage posts
-                </Button>
-              </Link>
-              <Link href="/admin/events">
-                <Button variant="outline" className="border-[#0F1E3D]/12">
-                  Manage events
-                </Button>
-              </Link>
-              <Link href="/admin/gallery">
-                <Button variant="outline" className="border-[#0F1E3D]/12">
-                  Manage gallery
-                </Button>
-              </Link>
-            </div>
-
-            <div className="mt-5 rounded-[22px] border border-[#0F1E3D]/8 bg-white p-5">
-              <div className="flex items-start gap-3">
-                <CheckCircle2 className="mt-0.5 size-5 text-[#C19A3D]" />
-                <p className="text-sm leading-7 text-[#0F1E3D]/66">
-                  The admin overview now acts as the central operations page for member review, achievement approval, content management, and certificate administration.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      </div>
     </div>
   )
 }

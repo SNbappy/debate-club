@@ -176,7 +176,7 @@ export function DashboardShell({
   return (
     <div className="min-h-screen bg-[#EEF2F6] text-[#0F1E3D]">
       <div className="flex min-h-screen">
-        <aside className="hidden w-[290px] shrink-0 border-r border-white/8 bg-[linear-gradient(180deg,#081731_0%,#0D2244_55%,#10284E_100%)] text-white lg:flex lg:flex-col">
+        <aside className="sticky top-0 h-screen hidden w-[290px] shrink-0 border-r border-white/8 bg-[linear-gradient(180deg,#081731_0%,#0D2244_55%,#10284E_100%)] text-white lg:flex lg:flex-col lg:overflow-y-auto">
           <div className="flex h-full flex-col px-5 py-5">
             <Link href="/" className="flex items-center gap-3 rounded-2xl px-2 py-2">
               <div className="flex size-12 items-center justify-center rounded-2xl border border-white/12 bg-white/8 shadow-[0_10px_30px_rgba(8,17,38,0.22)] backdrop-blur-md">
