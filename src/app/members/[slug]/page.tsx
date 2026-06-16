@@ -46,6 +46,35 @@ function InstagramIcon({ className }: { className?: string }) {
 import { createClient } from "@/lib/supabase/server"
 import { Reveal } from "@/components/home/animations"
 
+const SOCIAL_STYLES: Record<
+  string,
+  {
+    btnClass: string
+    iconColor: string
+  }
+> = {
+  Facebook: {
+    btnClass: "bg-[#1877F2]/10 border-[#1877F2]/20 hover:bg-[#1877F2] hover:border-[#1877F2] hover:shadow-[0_0_15px_rgba(24,119,242,0.4)]",
+    iconColor: "text-[#1877F2] group-hover:text-white",
+  },
+  LinkedIn: {
+    btnClass: "bg-[#0A66C2]/10 border-[#0A66C2]/20 hover:bg-[#0A66C2] hover:border-[#0A66C2] hover:shadow-[0_0_15px_rgba(10,102,194,0.4)]",
+    iconColor: "text-[#0A66C2] group-hover:text-white",
+  },
+  X: {
+    btnClass: "bg-white/5 border-white/10 hover:bg-white hover:border-white hover:text-black hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]",
+    iconColor: "text-white group-hover:text-black",
+  },
+  Instagram: {
+    btnClass: "bg-gradient-to-r from-[#E1306C]/10 to-[#C13584]/10 border-[#E1306C]/20 hover:from-[#E1306C] hover:to-[#C13584] hover:border-[#E1306C] hover:shadow-[0_0_15px_rgba(225,48,108,0.4)]",
+    iconColor: "text-[#E1306C] group-hover:text-white",
+  },
+  Website: {
+    btnClass: "bg-[#C19A3D]/10 border-[#C19A3D]/20 hover:bg-[#C19A3D] hover:border-[#C19A3D] hover:shadow-[0_0_15px_rgba(193,154,61,0.4)]",
+    iconColor: "text-[#C19A3D] group-hover:text-[#0F1E3D]",
+  },
+}
+
 const ROLE_LABELS: Record<string, string> = {
   member: "Member",
   executive: "Executive",
@@ -227,11 +256,11 @@ export default async function MemberProfilePage({
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,30,61,0.02)_0%,rgba(15,30,61,0.10)_42%,rgba(15,30,61,0.42)_100%)]" />
                 </div>
 
-                <div className="absolute -bottom-5 left-5 rounded-[1.35rem] bg-[#C19A3D] px-5 py-4 text-black shadow-2xl">
-                  <div className="mb-1 text-[11px] font-semibold uppercase tracking-[0.2em]">
+                <div className="absolute -bottom-5 left-5 rounded-[1.35rem] bg-[#C19A3D] px-4 py-3 sm:px-5 sm:py-4 text-black shadow-2xl">
+                  <div className="mb-1 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em]">
                     Member profile
                   </div>
-                  <div className="font-display text-[1.9rem] leading-none">
+                  <div className="font-display text-xl sm:text-2xl font-bold tracking-tight leading-none">
                     {roleLabel}
                   </div>
                 </div>
@@ -247,7 +276,7 @@ export default async function MemberProfilePage({
               </Reveal>
 
               <Reveal delay={0.18}>
-                <h1 className="mt-6 max-w-4xl font-display text-[3.2rem] leading-[0.88] tracking-[-0.04em] text-white sm:text-[4rem] md:text-[4.8rem] lg:text-[5.05rem]">
+                <h1 className="mt-6 max-w-4xl font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
                   {name}
                 </h1>
               </Reveal>
@@ -283,7 +312,7 @@ export default async function MemberProfilePage({
                               {fact.label}
                             </span>
                           </div>
-                          <div className="font-display text-[1.55rem] leading-none text-white">
+                          <div className="font-display text-base sm:text-lg font-bold text-white">
                             {fact.value}
                           </div>
                         </div>
@@ -299,9 +328,9 @@ export default async function MemberProfilePage({
                     {showEmail ? (
                       <a
                         href={`mailto:${profile.email}`}
-                        className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-white/8 px-4 py-2.5 text-white/86 transition-all duration-300 hover:border-white/24 hover:bg-white/12 hover:text-white"
+                        className="group inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-white transition-all duration-300 bg-[#C19A3D]/10 border-[#C19A3D]/20 hover:bg-[#C19A3D] hover:text-[#0F1E3D] hover:border-[#C19A3D] hover:shadow-[0_0_15px_rgba(193,154,61,0.4)]"
                       >
-                        <Mail className="size-4 text-[#C19A3D]" />
+                        <Mail className="size-4 text-[#C19A3D] group-hover:text-[#0F1E3D] transition-colors" />
                         {profile.email}
                       </a>
                     ) : null}
@@ -309,15 +338,19 @@ export default async function MemberProfilePage({
                     {showPhone ? (
                       <a
                         href={`tel:${profile.phone}`}
-                        className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-white/8 px-4 py-2.5 text-white/86 transition-all duration-300 hover:border-white/24 hover:bg-white/12 hover:text-white"
+                        className="group inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-white transition-all duration-300 bg-emerald-500/10 border-emerald-500/20 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.4)]"
                       >
-                        <Phone className="size-4 text-[#C19A3D]" />
+                        <Phone className="size-4 text-emerald-400 group-hover:text-white transition-colors" />
                         {profile.phone}
                       </a>
                     ) : null}
 
                     {socials.map((social) => {
                       const Icon = social.icon
+                      const style = SOCIAL_STYLES[social.label] || {
+                        btnClass: "bg-white/8 border-white/14 hover:bg-white/12 hover:border-white/24 text-white",
+                        iconColor: "text-[#C19A3D] group-hover:text-white"
+                      }
 
                       return (
                         <a
@@ -325,9 +358,9 @@ export default async function MemberProfilePage({
                           href={social.url ?? undefined}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 rounded-full border border-white/14 bg-white/8 px-4 py-2.5 text-white/86 transition-all duration-300 hover:border-white/24 hover:bg-white/12 hover:text-white"
+                          className={`group inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-white transition-all duration-300 ${style.btnClass}`}
                         >
-                          <Icon className="size-4 text-[#C19A3D]" />
+                          <Icon className={`size-4 transition-colors ${style.iconColor}`} />
                           {social.label}
                         </a>
                       )
@@ -348,7 +381,7 @@ export default async function MemberProfilePage({
               <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#C19A3D]">
                 Achievements
               </div>
-              <h2 className="font-display text-[1.9rem] leading-[0.96] tracking-tight text-[#0F1E3D] sm:text-4xl md:text-5xl">
+              <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#0F1E3D] leading-tight">
                 Verified milestones and competitive highlights.
               </h2>
             </div>
@@ -360,7 +393,7 @@ export default async function MemberProfilePage({
                 <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
                   Records
                 </div>
-                <h3 className="mt-3 font-display text-[2rem] leading-none text-[#0F1E3D]">
+                <h3 className="mt-3 font-display text-xl sm:text-2xl font-bold tracking-tight text-[#0F1E3D]">
                   No verified achievements yet
                 </h3>
                 <p className="mt-4 text-sm leading-7 text-[#0F1E3D]/66">
@@ -378,7 +411,7 @@ export default async function MemberProfilePage({
                         <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#C19A3D]">
                           Category
                         </div>
-                        <h3 className="font-display text-[1.85rem] leading-none text-[#0F1E3D] sm:text-[2.15rem]">
+                        <h3 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-[#0F1E3D] leading-none">
                           {CATEGORY_LABELS[category]}
                         </h3>
                       </div>
@@ -396,7 +429,7 @@ export default async function MemberProfilePage({
                                 <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
                                   Highlight
                                 </div>
-                                <h4 className="font-display text-[1.65rem] leading-[0.95] text-[#0F1E3D] sm:text-[1.9rem]">
+                                <h4 className="font-display text-lg sm:text-xl font-bold tracking-tight text-[#0F1E3D] leading-snug">
                                   {achievement.title}
                                 </h4>
                               </div>
@@ -441,7 +474,7 @@ export default async function MemberProfilePage({
                     <Award className="size-4" />
                     Certificates
                   </div>
-                  <h2 className="font-display text-[1.9rem] leading-[0.96] tracking-tight text-[#0F1E3D] sm:text-4xl md:text-5xl">
+                  <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#0F1E3D] leading-tight">
                     Verified records issued through club activity.
                   </h2>
                 </div>
@@ -460,7 +493,7 @@ export default async function MemberProfilePage({
                         <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
                           Certificate ID · {certificate.certificate_id}
                         </div>
-                        <h3 className="font-display text-[1.55rem] leading-none text-[#0F1E3D] sm:text-[1.8rem]">
+                        <h3 className="font-display text-lg sm:text-xl font-semibold tracking-tight text-[#0F1E3D] leading-snug">
                           {certificate.event_name}
                         </h3>
 
