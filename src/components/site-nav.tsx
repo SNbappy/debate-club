@@ -100,7 +100,9 @@ export function SiteNav({
             >
               <div
                 className={`font-display truncate font-bold tracking-tight transition-all duration-500 ${
-                  transparent ? "text-[1.35rem] leading-none sm:text-[1.9rem]" : "text-[0.95rem] sm:text-[1.15rem]"
+                  transparent 
+                    ? "text-[1.15rem] min-[375px]:text-[1.35rem] leading-none sm:text-[1.9rem]" 
+                    : "text-[0.9rem] min-[375px]:text-[0.95rem] sm:text-[1.15rem]"
                 }`}
               >
                 JUST Debate Club
@@ -284,14 +286,6 @@ export function SiteNav({
                     <div className="text-[9px] uppercase tracking-[0.24em] text-[#0F1E3D]/50">JUSTDC</div>
                   </div>
                 </div>
-
-                <button
-                  type="button"
-                  onClick={() => setOpen(false)}
-                  className="flex size-9 items-center justify-center rounded-full bg-[#FDF8EE] text-[#0F1E3D] transition-colors hover:bg-[#F6EFD9]"
-                >
-                  <X className="size-4" />
-                </button>
               </div>
 
               <nav className="flex-1 overflow-y-auto px-3 py-4">

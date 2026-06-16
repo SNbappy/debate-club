@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useState, useTransition } from "react"
 import Link from "next/link"
@@ -90,7 +90,7 @@ export default function SignupPage() {
 
         <div className="relative z-10 mx-auto flex max-w-7xl px-6 pb-16 pt-4 sm:px-8 sm:pb-20 sm:pt-6 lg:px-10 lg:pb-24 lg:pt-8">
           <div className="grid w-full items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
-            <div className="flex flex-col justify-center text-white">
+            <div className="hidden lg:flex flex-col justify-center text-white">
               <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/82 backdrop-blur-md">
                 <BadgeCheck className="size-3.5 text-[#C19A3D]" />
                 Member registration
