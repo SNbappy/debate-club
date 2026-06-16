@@ -234,88 +234,42 @@ export default async function MemberProfilePage({
             </Link>
           </Reveal>
 
-          <div className="mt-8 grid gap-8 lg:grid-cols-[0.88fr_1.12fr] lg:items-end lg:gap-14">
+          <div className="mt-8 grid gap-8 lg:grid-cols-[0.88fr_1.12fr] lg:items-center lg:gap-14">
             <Reveal delay={0.08}>
-              <div className="relative max-w-[28rem]">
-                <div className="relative overflow-hidden rounded-[1.9rem] border border-white/10 bg-[#132750] shadow-[0_32px_80px_rgba(0,0,0,0.28)]">
-                  <div className="aspect-[4/4.65] bg-[#102246]">
-                    {normalizeText(profile.avatar_url) ? (
-                      <img
-                        src={profile.avatar_url ?? undefined}
-                        alt={name}
-                        className="h-full w-full object-cover object-top"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_30%_25%,rgba(193,154,61,0.20),transparent_18%),linear-gradient(180deg,#132750_0%,#0F1E3D_100%)]">
-                        <div className="rounded-full border border-[#C19A3D]/30 bg-white/8 px-7 py-6 font-display text-[4.6rem] leading-none tracking-tight text-[#F5E7BF] backdrop-blur-sm sm:text-[5.4rem]">
-                          {initials}
+              <div className="flex flex-col items-center gap-6">
+                <div className="relative w-full max-w-[28rem]">
+                  <div className="relative overflow-hidden rounded-[1.9rem] border border-white/10 bg-[#132750] shadow-[0_32px_80px_rgba(0,0,0,0.28)]">
+                    <div className="aspect-[4/4.65] bg-[#102246]">
+                      {normalizeText(profile.avatar_url) ? (
+                        <img
+                          src={profile.avatar_url ?? undefined}
+                          alt={name}
+                          className="h-full w-full object-cover object-top"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_30%_25%,rgba(193,154,61,0.20),transparent_18%),linear-gradient(180deg,#132750_0%,#0F1E3D_100%)]">
+                          <div className="rounded-full border border-[#C19A3D]/30 bg-white/8 px-7 py-6 font-display text-[4.6rem] leading-none tracking-tight text-[#F5E7BF] backdrop-blur-sm sm:text-[5.4rem]">
+                            {initials}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,30,61,0.02)_0%,rgba(15,30,61,0.10)_42%,rgba(15,30,61,0.42)_100%)]" />
                   </div>
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,30,61,0.02)_0%,rgba(15,30,61,0.10)_42%,rgba(15,30,61,0.42)_100%)]" />
+
+                  <div className="absolute -bottom-5 left-5 rounded-[1.35rem] bg-[#C19A3D] px-4 py-3 sm:px-5 sm:py-4 text-black shadow-2xl">
+                    <div className="mb-1 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em]">
+                      Member profile
+                    </div>
+                    <div className="font-display text-xl sm:text-2xl font-bold tracking-tight leading-none">
+                      {roleLabel}
+                    </div>
+                  </div>
                 </div>
 
-                <div className="absolute -bottom-5 left-5 rounded-[1.35rem] bg-[#C19A3D] px-4 py-3 sm:px-5 sm:py-4 text-black shadow-2xl">
-                  <div className="mb-1 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em]">
-                    Member profile
-                  </div>
-                  <div className="font-display text-xl sm:text-2xl font-bold tracking-tight leading-none">
-                    {roleLabel}
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-
-            <div className="max-w-3xl">
-              <Reveal delay={0.18}>
-                <h1 className="mt-2 max-w-4xl font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
-                  {name}
-                </h1>
-              </Reveal>
-
-              <Reveal delay={0.24}>
-                <p className="mt-4 text-[12px] font-semibold uppercase tracking-[0.24em] text-[#C19A3D]">
-                  {displayTitle}
-                </p>
-              </Reveal>
-
-              {normalizeText(profile.bio) ? (
-                <Reveal delay={0.3}>
-                  <p className="mt-6 max-w-2xl text-[1rem] leading-[1.85] text-white/80 md:text-[1.05rem]">
-                    {profile.bio}
-                  </p>
-                </Reveal>
-              ) : null}
-
-              {facts.length > 0 ? (
-                <Reveal delay={0.36}>
-                  <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 backdrop-blur-md">
-                    {facts.map((fact, index) => {
-                      const Icon = fact.icon
-
-                      return (
-                        <div key={`${fact.label}-${fact.value}`} className="flex items-center gap-2">
-                          <Icon className="size-4 text-[#C19A3D]" />
-                          <span className="text-white/40 uppercase tracking-[0.12em] text-[10px] font-semibold">
-                            {fact.label}:
-                          </span>
-                          <span className="font-semibold text-white text-[13px] sm:text-sm">
-                            {fact.value}
-                          </span>
-                          {index < facts.length - 1 && (
-                            <span className="text-white/10 ml-6 hidden lg:inline">|</span>
-                          )}
-                        </div>
-                      )
-                    })}
-                  </div>
-                </Reveal>
-              ) : null}
-
-              {(socials.length > 0 || showEmail || showPhone) && (
-                <Reveal delay={0.42}>
-                  <div className="mt-8 flex flex-wrap gap-4 items-center">
+                {/* Social media icons below the picture card */}
+                {(socials.length > 0 || showEmail || showPhone) && (
+                  <div className="mt-4 flex flex-wrap gap-4 justify-center items-center">
                     {showEmail ? (
                       <a
                         href={`mailto:${profile.email}`}
@@ -357,8 +311,52 @@ export default async function MemberProfilePage({
                       )
                     })}
                   </div>
+                )}
+              </div>
+            </Reveal>
+
+            <div className="max-w-3xl">
+              <Reveal delay={0.18}>
+                <h1 className="mt-2 max-w-4xl font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
+                  {name}
+                </h1>
+              </Reveal>
+
+              <Reveal delay={0.24}>
+                <p className="mt-4 text-[12px] font-semibold uppercase tracking-[0.24em] text-[#C19A3D]">
+                  {displayTitle}
+                </p>
+              </Reveal>
+
+              {normalizeText(profile.bio) ? (
+                <Reveal delay={0.3}>
+                  <p className="mt-6 max-w-2xl text-[1rem] leading-[1.85] text-white/80 md:text-[1.05rem]">
+                    {profile.bio}
+                  </p>
                 </Reveal>
-              )}
+              ) : null}
+
+              {facts.length > 0 ? (
+                <Reveal delay={0.36}>
+                  <div className="mt-8 flex flex-wrap gap-3">
+                    {facts.map((fact) => {
+                      const Icon = fact.icon
+
+                      return (
+                        <div key={`${fact.label}-${fact.value}`} className="flex items-center gap-2 bg-white/6 border border-white/12 rounded-full px-4 py-2 backdrop-blur-sm shadow-sm transition-all duration-300 hover:bg-white/10 hover:border-white/20">
+                          <Icon className="size-4 text-[#C19A3D] shrink-0" />
+                          <span className="text-white/40 uppercase tracking-[0.12em] text-[10px] font-bold">
+                            {fact.label}:
+                          </span>
+                          <span className="font-semibold text-white text-[13px] sm:text-sm">
+                            {fact.value}
+                          </span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </Reveal>
+              ) : null}
             </div>
           </div>
         </div>
@@ -399,9 +397,6 @@ export default async function MemberProfilePage({
                   <section>
                     <div className="mb-5 flex items-end justify-between gap-4 border-b border-[#0F1E3D]/10 pb-4">
                       <div>
-                        <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#C19A3D]">
-                          Category
-                        </div>
                         <h3 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-[#0F1E3D] leading-none">
                           {CATEGORY_LABELS[category]}
                         </h3>
@@ -415,11 +410,8 @@ export default async function MemberProfilePage({
                       {grouped[category]!.map((achievement, itemIndex) => (
                         <Reveal key={achievement.id} delay={0.08 + itemIndex * 0.03}>
                           <article className="group overflow-hidden rounded-[1.55rem] border border-[#0F1E3D]/10 bg-white shadow-[0_12px_34px_rgba(15,30,61,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_46px_rgba(15,30,61,0.08)]">
-                            <div className="grid gap-5 p-5 sm:p-6 md:grid-cols-[0.92fr_1.08fr] md:gap-8">
+                            <div className="grid p-5 sm:p-6 md:grid-cols-[0.92fr_1.08fr] md:gap-8">
                               <div>
-                                <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
-                                  Highlight
-                                </div>
                                 <h4 className="font-display text-lg sm:text-xl font-bold tracking-tight text-[#0F1E3D] leading-snug">
                                   {achievement.title}
                                 </h4>
@@ -459,19 +451,14 @@ export default async function MemberProfilePage({
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,rgba(193,154,61,0.08),transparent_26%),linear-gradient(180deg,rgba(253,248,238,0.42)_0%,rgba(255,255,255,1)_26%)]" />
           <div className="relative mx-auto max-w-6xl px-6">
             <Reveal>
-              <div className="mb-10 grid gap-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-end">
-                <div className="max-w-xl">
-                  <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#C19A3D]">
-                    <Award className="size-4" />
-                    Certificates
-                  </div>
-                  <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#0F1E3D] leading-tight">
-                    Verified records issued through club activity.
-                  </h2>
+              <div className="mb-10 max-w-xl">
+                <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#C19A3D]">
+                  <Award className="size-4" />
+                  Certificates
                 </div>
-                <p className="max-w-2xl text-base leading-8 text-[#0F1E3D]/68 lg:justify-self-end">
-                  Certificate entries remain connected to their verification pages so achievements can stay public, traceable, and easy to confirm.
-                </p>
+                <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#0F1E3D] leading-tight">
+                  Verified records issued through club activity.
+                </h2>
               </div>
             </Reveal>
 
@@ -481,9 +468,9 @@ export default async function MemberProfilePage({
                   <article className="rounded-[1.55rem] border border-[#0F1E3D]/10 bg-[#FDF8EE] p-5 shadow-[0_12px_34px_rgba(15,30,61,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_46px_rgba(15,30,61,0.07)] sm:p-6">
                     <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
                       <div className="min-w-0 flex-1">
-                        <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
-                          Certificate ID · {certificate.certificate_id}
-                        </div>
+                        <span className="inline-flex items-center rounded-md bg-[#EEF2F6] px-2.5 py-1 text-xs font-mono font-bold text-[#0F1E3D]/60 ring-1 ring-inset ring-[#0F1E3D]/10 mb-3">
+                          ID: {certificate.certificate_id}
+                        </span>
                         <h3 className="font-display text-lg sm:text-xl font-semibold tracking-tight text-[#0F1E3D] leading-snug">
                           {certificate.event_name}
                         </h3>
