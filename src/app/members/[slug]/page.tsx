@@ -201,13 +201,6 @@ export default async function MemberProfilePage({
           icon: Calendar,
         }
       : null,
-    roleLabel
-      ? {
-          label: "Role",
-          value: roleLabel,
-          icon: Sparkles,
-        }
-      : null,
   ].filter(Boolean) as {
     label: string
     value: string
@@ -236,82 +229,34 @@ export default async function MemberProfilePage({
 
           <div className="mt-8 grid gap-8 lg:grid-cols-[0.88fr_1.12fr] lg:items-center lg:gap-14">
             <Reveal delay={0.08}>
-              <div className="flex flex-col items-center gap-6">
-                <div className="relative w-full max-w-[28rem]">
-                  <div className="relative overflow-hidden rounded-[1.9rem] border border-white/10 bg-[#132750] shadow-[0_32px_80px_rgba(0,0,0,0.28)]">
-                    <div className="aspect-[4/4.65] bg-[#102246]">
-                      {normalizeText(profile.avatar_url) ? (
-                        <img
-                          src={profile.avatar_url ?? undefined}
-                          alt={name}
-                          className="h-full w-full object-cover object-top"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_30%_25%,rgba(193,154,61,0.20),transparent_18%),linear-gradient(180deg,#132750_0%,#0F1E3D_100%)]">
-                          <div className="rounded-full border border-[#C19A3D]/30 bg-white/8 px-7 py-6 font-display text-[4.6rem] leading-none tracking-tight text-[#F5E7BF] backdrop-blur-sm sm:text-[5.4rem]">
-                            {initials}
-                          </div>
+              <div className="relative max-w-[28rem] mx-auto lg:mx-0">
+                <div className="relative overflow-hidden rounded-[1.9rem] border border-white/10 bg-[#132750] shadow-[0_32px_80px_rgba(0,0,0,0.28)]">
+                  <div className="aspect-[4/4.65] bg-[#102246]">
+                    {normalizeText(profile.avatar_url) ? (
+                      <img
+                        src={profile.avatar_url ?? undefined}
+                        alt={name}
+                        className="h-full w-full object-cover object-top"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_30%_25%,rgba(193,154,61,0.20),transparent_18%),linear-gradient(180deg,#132750_0%,#0F1E3D_100%)]">
+                        <div className="rounded-full border border-[#C19A3D]/30 bg-white/8 px-7 py-6 font-display text-[4.6rem] leading-none tracking-tight text-[#F5E7BF] backdrop-blur-sm sm:text-[5.4rem]">
+                          {initials}
                         </div>
-                      )}
-                    </div>
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,30,61,0.02)_0%,rgba(15,30,61,0.10)_42%,rgba(15,30,61,0.42)_100%)]" />
+                      </div>
+                    )}
                   </div>
-
-                  <div className="absolute -bottom-5 left-5 rounded-[1.35rem] bg-[#C19A3D] px-4 py-3 sm:px-5 sm:py-4 text-black shadow-2xl">
-                    <div className="mb-1 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em]">
-                      Member profile
-                    </div>
-                    <div className="font-display text-xl sm:text-2xl font-bold tracking-tight leading-none">
-                      {roleLabel}
-                    </div>
-                  </div>
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,30,61,0.02)_0%,rgba(15,30,61,0.10)_42%,rgba(15,30,61,0.42)_100%)]" />
                 </div>
 
-                {/* Social media icons below the picture card */}
-                {(socials.length > 0 || showEmail || showPhone) && (
-                  <div className="mt-4 flex flex-wrap gap-4 justify-center items-center">
-                    {showEmail ? (
-                      <a
-                        href={`mailto:${profile.email}`}
-                        title={profile.email ?? undefined}
-                        className="group flex items-center justify-center rounded-full border p-3 text-white transition-all duration-300 bg-[#C19A3D]/10 border-[#C19A3D]/20 hover:bg-[#C19A3D] hover:text-[#0F1E3D] hover:border-[#C19A3D] hover:shadow-[0_0_15px_rgba(193,154,61,0.4)]"
-                      >
-                        <Mail className="size-5 text-[#C19A3D] group-hover:text-[#0F1E3D] transition-colors" />
-                      </a>
-                    ) : null}
-
-                    {showPhone ? (
-                      <a
-                        href={`tel:${profile.phone}`}
-                        title={profile.phone ?? undefined}
-                        className="group flex items-center justify-center rounded-full border p-3 text-white transition-all duration-300 bg-emerald-500/10 border-emerald-500/20 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.4)]"
-                      >
-                        <Phone className="size-5 text-emerald-400 group-hover:text-white transition-colors" />
-                      </a>
-                    ) : null}
-
-                    {socials.map((social) => {
-                      const Icon = social.icon
-                      const style = SOCIAL_STYLES[social.label] || {
-                        btnClass: "bg-white/8 border-white/14 hover:bg-white/12 hover:border-white/24 text-white",
-                        iconColor: "text-[#C19A3D] group-hover:text-white"
-                      }
-
-                      return (
-                        <a
-                          key={social.label}
-                          href={social.url ?? undefined}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          title={social.label}
-                          className={`group flex items-center justify-center rounded-full border p-3 text-white transition-all duration-300 ${style.btnClass}`}
-                        >
-                          <Icon className={`size-5 transition-colors ${style.iconColor}`} />
-                        </a>
-                      )
-                    })}
+                <div className="absolute -bottom-5 left-5 rounded-[1.35rem] bg-[#C19A3D] px-4 py-3 sm:px-5 sm:py-4 text-black shadow-2xl">
+                  <div className="mb-1 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em]">
+                    Member profile
                   </div>
-                )}
+                  <div className="font-display text-xl sm:text-2xl font-bold tracking-tight leading-none">
+                    {roleLabel}
+                  </div>
+                </div>
               </div>
             </Reveal>
 
@@ -327,6 +272,59 @@ export default async function MemberProfilePage({
                   {displayTitle}
                 </p>
               </Reveal>
+
+              {/* CONNECT Section between title and bio */}
+              {(socials.length > 0 || showEmail || showPhone) && (
+                <Reveal delay={0.27}>
+                  <div className="mt-6 space-y-2">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C19A3D]">
+                      CONNECT
+                    </div>
+                    <div className="flex flex-wrap gap-4 items-center">
+                      {showEmail ? (
+                        <a
+                          href={`mailto:${profile.email}`}
+                          title={profile.email ?? undefined}
+                          className="group flex items-center justify-center rounded-full border p-3 text-white transition-all duration-300 hover:scale-110 bg-[#C19A3D]/10 border-[#C19A3D]/20 hover:bg-[#C19A3D] hover:text-[#0F1E3D] hover:border-[#C19A3D] hover:shadow-[0_0_15px_rgba(193,154,61,0.4)]"
+                        >
+                          <Mail className="size-[22px] text-[#C19A3D] group-hover:text-[#0F1E3D] transition-colors" />
+                        </a>
+                      ) : null}
+
+                      {showPhone ? (
+                        <a
+                          href={`tel:${profile.phone}`}
+                          title={profile.phone ?? undefined}
+                          className="group flex items-center justify-center rounded-full border p-3 text-white transition-all duration-300 hover:scale-110 bg-emerald-500/10 border-emerald-500/20 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.4)]"
+                        >
+                          <Phone className="size-[22px] text-emerald-400 group-hover:text-white transition-colors" />
+                        </a>
+                      ) : null}
+
+                      {socials.map((social) => {
+                        const Icon = social.icon
+                        const style = SOCIAL_STYLES[social.label] || {
+                          btnClass: "bg-white/8 border-white/14 hover:bg-white/12 hover:border-white/24 text-white",
+                          iconColor: "text-[#C19A3D] group-hover:text-white"
+                        }
+
+                        return (
+                          <a
+                            key={social.label}
+                            href={social.url ?? undefined}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={social.label}
+                            className={`group flex items-center justify-center rounded-full border p-3 text-white transition-all duration-300 hover:scale-110 ${style.btnClass}`}
+                          >
+                            <Icon className={`size-[22px] transition-colors ${style.iconColor}`} />
+                          </a>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </Reveal>
+              )}
 
               {normalizeText(profile.bio) ? (
                 <Reveal delay={0.3}>
