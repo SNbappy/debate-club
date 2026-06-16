@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -37,7 +37,9 @@ export function SiteFooter() {
             <div className="text-[11px] uppercase tracking-[0.2em] text-[#C19A3D] font-semibold mb-4">Explore</div>
             <ul className="space-y-2.5 text-sm">
               {[
+                { href: "/about", label: "About" },
                 { href: "/members", label: "Members" },
+                { href: "/achievements", label: "Achievements" },
                 { href: "/posts", label: "Posts" },
                 { href: "/events", label: "Events" },
                 { href: "/gallery", label: "Gallery" },

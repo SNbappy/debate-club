@@ -20,7 +20,9 @@ import { Menu, X, LogOut, User as UserIcon, LayoutDashboard, ChevronRight } from
 const HIDDEN = ["/login", "/signup", "/forgot-password", "/reset-password", "/dashboard", "/admin", "/verify"]
 const NAV = [
   { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
   { href: "/members", label: "Members" },
+  { href: "/achievements", label: "Achievements" },
   { href: "/posts", label: "Posts" },
   { href: "/events", label: "Events" },
   { href: "/gallery", label: "Gallery" },
