@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
+import type { InsertTables, UpdateTables } from "@/types/supabase"
 
 const achievementSchema = z.object({
   title: z.string().min(2, "Title too short").max(200),
@@ -47,7 +48,7 @@ export async function createAchievement(formData: FormData): Promise<{ error?: s
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid input" }
 
   const { error } = await supabase.from("achievements").insert({
-    ...(toDb(parsed.data) as any),
+    ...(toDb(parsed.data) as InsertTables<"achievements">),
     profile_id: user.id,
   })
   if (error) return { error: error.message }
@@ -66,7 +67,7 @@ export async function updateAchievement(id: string, formData: FormData): Promise
 
   const { error } = await supabase
     .from("achievements")
-    .update(toDb(parsed.data) as any)
+    .update(toDb(parsed.data) as UpdateTables<"achievements">)
     .eq("id", id)
     .eq("profile_id", user.id)
     .eq("is_verified", false)

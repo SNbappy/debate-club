@@ -1,6 +1,6 @@
-﻿"use client"
+"use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, useCallback } from "react"
 import { createPortal } from "react-dom"
 import { ArrowLeft, ArrowRight, X } from "lucide-react"
 
@@ -22,7 +22,7 @@ type PublicAlbumViewerProps = {
 }
 
 export function PublicAlbumViewer({
-  albumSlug,
+  albumSlug: _albumSlug,
   albumTitle,
   photos,
   initialPhotoId,
@@ -42,7 +42,8 @@ export function PublicAlbumViewer({
   const nextPhoto = activeIndex < photos.length - 1 ? photos[activeIndex + 1] : null
 
   useEffect(() => {
-    setMounted(true)
+    const timer = setTimeout(() => setMounted(true), 0)
+    return () => clearTimeout(timer)
   }, [])
 
   useEffect(() => {
@@ -63,9 +64,9 @@ export function PublicAlbumViewer({
     setIsOpen(false)
   }
 
-  const goToIndex = (index: number) => {
+  const goToIndex = useCallback((index: number) => {
     setActiveIndex(Math.max(0, Math.min(index, photos.length - 1)))
-  }
+  }, [photos.length])
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -77,7 +78,7 @@ export function PublicAlbumViewer({
 
     window.addEventListener("keydown", onKeyDown)
     return () => window.removeEventListener("keydown", onKeyDown)
-  }, [activeIndex, isOpen, nextPhoto, previousPhoto])
+  }, [activeIndex, isOpen, nextPhoto, previousPhoto, goToIndex])
 
   if (!selectedPhoto) return null
 
@@ -117,7 +118,7 @@ export function PublicAlbumViewer({
                       e.stopPropagation()
                       goToIndex(activeIndex - 1)
                     }}
-                    className="absolute left-2 top-1/2 z-[10001] inline-flex size-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/12 bg-white/8 text-white backdrop-blur-sm hover:bg-white/14 sm:left-4"
+                    className="absolute left-2 top-1/2 z-[10001] md:inline-flex hidden size-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/12 bg-white/8 text-white backdrop-blur-sm hover:bg-white/14 sm:left-4"
                     aria-label="Previous photo"
                   >
                     <ArrowLeft className="size-4" />
@@ -132,7 +133,7 @@ export function PublicAlbumViewer({
                       e.stopPropagation()
                       goToIndex(activeIndex + 1)
                     }}
-                    className="absolute right-2 top-1/2 z-[10001] inline-flex size-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/12 bg-white/8 text-white backdrop-blur-sm hover:bg-white/14 sm:right-4"
+                    className="absolute right-2 top-1/2 z-[10001] md:inline-flex hidden size-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/12 bg-white/8 text-white backdrop-blur-sm hover:bg-white/14 sm:right-4"
                     aria-label="Next photo"
                   >
                     <ArrowRight className="size-4" />
@@ -147,6 +148,43 @@ export function PublicAlbumViewer({
                   />
                 </div>
               </div>
+
+              {/* Mobile overlay navigation (hidden on md and above) */}
+              {hasMultiple && (
+                <div className="mt-4 flex items-center justify-center gap-6 md:hidden">
+                  <button
+                    type="button"
+                    disabled={!previousPhoto}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      goToIndex(activeIndex - 1)
+                    }}
+                    className="inline-flex size-11 items-center justify-center rounded-full border border-white/12 bg-white/8 text-white backdrop-blur-sm transition-colors hover:bg-white/14 disabled:pointer-events-none disabled:opacity-40"
+                    aria-label="Previous photo"
+                  >
+                    <ArrowLeft className="size-4" />
+                  </button>
+
+                  <div className="text-[13px] font-semibold tracking-wider text-white/95">
+                    {activeIndex + 1} / {photos.length}
+                  </div>
+
+                  <button
+                    type="button"
+                    disabled={!nextPhoto}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      goToIndex(activeIndex + 1)
+                    }}
+                    className="inline-flex size-11 items-center justify-center rounded-full border border-white/12 bg-white/8 text-white backdrop-blur-sm transition-colors hover:bg-white/14 disabled:pointer-events-none disabled:opacity-40"
+                    aria-label="Next photo"
+                  >
+                    <ArrowRight className="size-4" />
+                  </button>
+                </div>
+              )}
 
               {hasMultiple ? (
                 <div className="mt-4">

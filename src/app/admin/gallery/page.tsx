@@ -1,6 +1,6 @@
-﻿import Link from "next/link"
+import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
-import { GalleryAdminClient } from "./gallery-admin-client"
+import { GalleryAdminClient, type Album } from "./gallery-admin-client"
 import { Sparkles, ArrowUpRight } from "lucide-react"
 
 export default async function AdminGalleryPage() {
@@ -12,8 +12,8 @@ export default async function AdminGalleryPage() {
     .order("created_at", { ascending: false })
 
   const totalAlbums = albums?.length ?? 0
-  const publishedAlbums = (albums ?? []).filter((album: any) => album.is_published).length
-  const totalPhotos = (albums ?? []).reduce((sum: number, album: any) => {
+  const publishedAlbums = ((albums as Album[]) ?? []).filter((album: Album) => album.is_published).length
+  const totalPhotos = ((albums as Album[]) ?? []).reduce((sum: number, album: Album) => {
     const count = album.gallery_images?.[0]?.count ?? 0
     return sum + count
   }, 0)
@@ -94,7 +94,7 @@ export default async function AdminGalleryPage() {
         </div>
 
         <div className="px-6 py-6 sm:px-8 sm:py-8">
-          <GalleryAdminClient albums={(albums as any) ?? []} />
+          <GalleryAdminClient albums={(albums as Album[]) ?? []} />
         </div>
       </section>
     </main>

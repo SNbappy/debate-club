@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Images, ArrowRight, Sparkles } from "lucide-react"
+import { Images, ArrowRight } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
 import { Reveal } from "@/components/home/animations"
 
@@ -242,7 +242,7 @@ export default async function GalleryPage() {
 
             <AlbumCard
               album={featuredAlbum}
-              count={(featuredAlbum as any).gallery_images?.[0]?.count ?? 0}
+              count={featuredAlbum.gallery_images?.[0]?.count ?? 0}
               featured
             />
           </div>
@@ -274,7 +274,7 @@ export default async function GalleryPage() {
                 <AlbumCard
                   key={album.id}
                   album={album}
-                  count={(album as any).gallery_images?.[0]?.count ?? 0}
+                  count={album.gallery_images?.[0]?.count ?? 0}
                   tilt={tilts[index % tilts.length]}
                   delay={0.04 + index * 0.03}
                 />

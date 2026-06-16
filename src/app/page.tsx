@@ -1,7 +1,7 @@
-﻿import Link from "next/link"
+import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+
 import { Hero } from "@/components/home/hero"
 import { CountUp, Reveal } from "@/components/home/animations"
 import { WelcomeSection } from "@/components/home/welcome-section"
@@ -9,7 +9,7 @@ import {
   Trophy,
   Calendar,
   Mic,
-  ArrowRight,  MessageSquare,  Camera,
+  ArrowRight,  Camera,
   BookOpen,
   Scale,
   MessagesSquare,

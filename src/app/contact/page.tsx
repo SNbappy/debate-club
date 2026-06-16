@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useState, useRef } from "react"
 import { motion } from "motion/react"
@@ -108,7 +108,7 @@ export default function ContactPage() {
 
           {/* Form */}
           <div className="md:col-span-3">
-            <div className="bg-white rounded-2xl shadow-sm border border-[#0F1E3D]/10 p-8">
+            <div className="bg-white rounded-2xl shadow-sm border border-[#0F1E3D]/10 p-5 sm:p-8">
               <p className="text-xs uppercase tracking-[0.2em] text-[#C19A3D] mb-4 font-semibold">Send a Message</p>
               <form ref={formRef} onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-5">

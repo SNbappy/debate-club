@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
+import type { UpdateTables } from "@/types/supabase"
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
@@ -70,7 +71,7 @@ export async function updateProfile(formData: FormData): Promise<{ error?: strin
       .slice(0, 50)
   }
 
-  const { error } = await supabase.from("profiles").update(data as any).eq("id", user.id)
+  const { error } = await supabase.from("profiles").update(data as UpdateTables<"profiles">).eq("id", user.id)
   if (error) {
     if (error.code === "23505") return { error: "That profile URL slug is already taken." }
     return { error: error.message }

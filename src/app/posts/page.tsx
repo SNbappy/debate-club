@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Sparkles, ArrowRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
 import { Reveal } from "@/components/home/animations"
 
@@ -54,7 +54,7 @@ function PostCard({
   const image = normalizeText(post.cover_image_url)
   const title = normalizeText(post.title) || "Untitled Post"
   const excerpt = normalizeText(post.excerpt)
-  const author = (post as any).profiles
+  const author = post.profiles
   const typeLabel = TYPE_LABELS[post.type] ?? post.type
 
   return (
@@ -167,9 +167,7 @@ export default async function PostsPage({
   const featuredPost = type === "" ? (allPosts[0] ?? null) : null
   const remainingPosts = featuredPost ? allPosts.slice(1) : allPosts
 
-  const typeCounts = {
-    total: allPosts.length,
-  }
+
 
   return (
     <main className="bg-white text-[#0F1E3D]">

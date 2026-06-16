@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Calendar, Clock3, MapPin, ArrowRight, Sparkles } from "lucide-react"
+import { Calendar, Clock3, MapPin, ArrowRight } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
 import { Reveal } from "@/components/home/animations"
 

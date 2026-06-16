@@ -1,9 +1,10 @@
-﻿import type { Metadata } from "next"
+import type { Metadata } from "next"
 import { Cormorant_Garamond, Manrope } from "next/font/google"
 
 import "./globals.css"
 import { Toaster } from "@/components/ui/sonner"
 import { AppShell } from "@/components/app-shell"
+import { PageLoader } from "@/components/page-loader"
 import { createClient } from "@/lib/supabase/server"
 
 const bodyFont = Manrope({
@@ -47,6 +48,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${bodyFont.variable} ${displayFont.variable}`}>
       <body className="min-h-screen overflow-x-hidden bg-white text-[#0F1E3D] antialiased">
+        <PageLoader />
         <AppShell user={user} profile={profile}>
           {children}
         </AppShell>

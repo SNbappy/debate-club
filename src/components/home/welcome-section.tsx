@@ -1,4 +1,4 @@
-﻿import { Reveal } from "./animations"
+import { Reveal } from "./animations"
 
 export function WelcomeSection() {
   return (
@@ -46,7 +46,7 @@ export function WelcomeSection() {
                     Welcome note
                   </div>
                   <blockquote className="font-display text-[1.6rem] leading-[1.06] tracking-tight text-[#0F1E3D] sm:text-[1.85rem] md:text-[2.2rem]">
-                    "We believe debate is not only about winning arguments, but about building character, clarity, and conviction."
+                    &ldquo;We believe debate is not only about winning arguments, but about building character, clarity, and conviction.&rdquo;
                   </blockquote>
                   <p className="mt-5 text-[15px] leading-7 text-[#0F1E3D]/72">
                     Our club stands for disciplined thought, respectful disagreement, and the courage to speak with reason. We invite every curious mind to grow with us through dialogue, competition, and shared learning.
@@ -68,12 +68,12 @@ export function WelcomeSection() {
               style={{ contain: "layout paint style" }}
             >
               <div className="grid md:grid-cols-[1.12fr_0.88fr]">
-                <div className="relative p-6 sm:p-7 md:p-8">
+                <div className="relative p-6 sm:p-7 md:p-8 order-2 md:order-1">
                   <div className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#C19A3D]">
                     General Secretary
                   </div>
                   <blockquote className="font-display text-[1.6rem] leading-[1.06] tracking-tight text-white sm:text-[1.85rem] md:text-[2.2rem]">
-                    "JUSTDC is a place where ideas are sharpened, friendships are built, and voices learn to carry purpose."
+                    &ldquo;JUSTDC is a place where ideas are sharpened, friendships are built, and voices learn to carry purpose.&rdquo;
                   </blockquote>
                   <p className="mt-5 text-[15px] leading-7 text-white/76">
                     We are building a culture where members can think deeply, speak confidently, and represent the club with excellence. Whether you are experienced or just beginning, your voice has a place here.
@@ -86,7 +86,7 @@ export function WelcomeSection() {
                   </div>
                 </div>
 
-                <div className="relative min-h-[320px] overflow-hidden sm:min-h-[380px] md:min-h-full">
+                <div className="relative min-h-[320px] overflow-hidden sm:min-h-[380px] md:min-h-full order-1 md:order-2">
                   <img
                     src="/images/home/general-secretary.jpg"
                     alt="General Secretary of JUST Debate Club"

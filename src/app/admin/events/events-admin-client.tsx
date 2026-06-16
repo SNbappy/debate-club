@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useMemo, useState, useTransition } from "react"
 import {
@@ -76,7 +76,7 @@ export function EventsAdminClient({ events }: { events: Evt[] }) {
   const [coverUrl, setCoverUrl] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
-  const now = Date.now()
+  const [now] = useState(() => Date.now())
 
   const sortedEvents = useMemo(
     () =>

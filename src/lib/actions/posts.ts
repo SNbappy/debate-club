@@ -1,8 +1,9 @@
-﻿"use server"
+"use server"
 
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
+import type { UpdateTables } from "@/types/supabase"
 
 const POST_TYPES = ["news", "blog", "tournament_writeup", "announcement"] as const
 
@@ -29,17 +30,27 @@ function autoSlug(title: string): string {
   return title.toLowerCase().replace(/[^a-z0-9\s-]/g, "").trim().replace(/\s+/g, "-").slice(0, 100)
 }
 
-function normalize(input: any) {
+interface RawPostInput {
+  title?: string
+  slug?: string
+  excerpt?: string
+  content?: string
+  cover_image_url?: string
+  type?: "news" | "blog" | "tournament_writeup" | "announcement"
+  is_published?: boolean | string
+}
+
+function normalize(input: RawPostInput) {
   return {
     ...input,
-    slug: input.slug || autoSlug(input.title),
+    slug: input.slug || autoSlug(input.title || ""),
     excerpt: input.excerpt || undefined,
     cover_image_url: input.cover_image_url || undefined,
     is_published: input.is_published === true || input.is_published === "true" || input.is_published === "on",
   }
 }
 
-export async function adminCreatePost(input: any): Promise<{ error?: string; id?: string }> {
+export async function adminCreatePost(input: RawPostInput): Promise<{ error?: string; id?: string }> {
   const ctx = await requireAdmin()
   if ("error" in ctx) return { error: ctx.error }
   const parsed = postSchema.safeParse(normalize(input))
@@ -65,14 +76,14 @@ export async function adminCreatePost(input: any): Promise<{ error?: string; id?
   return { id: post?.id }
 }
 
-export async function adminUpdatePost(id: string, input: any): Promise<{ error?: string }> {
+export async function adminUpdatePost(id: string, input: RawPostInput): Promise<{ error?: string }> {
   const ctx = await requireAdmin()
   if ("error" in ctx) return { error: ctx.error }
   const parsed = postSchema.safeParse(normalize(input))
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid input" }
 
   const { data: current } = await ctx.supabase.from("posts").select("is_published").eq("id", id).single()
-  const updateData: any = {
+  const updateData: UpdateTables<"posts"> = {
     title: parsed.data.title,
     slug: parsed.data.slug,
     excerpt: parsed.data.excerpt || null,

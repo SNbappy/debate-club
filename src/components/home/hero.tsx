@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, useReducedMotion } from "motion/react"
-import { ArrowRight, Award, Sparkles, Trophy, Users } from "lucide-react"
+import { ArrowRight, Award, Trophy, Users } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { HeroSlider } from "./hero-slider"

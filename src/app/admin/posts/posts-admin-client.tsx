@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useMemo, useState, useTransition } from "react"
 import {
@@ -124,7 +124,7 @@ export function PostsAdminClient({ posts }: { posts: Post[] }) {
       excerpt: (formData.get("excerpt") as string) || undefined,
       content: formData.get("content") as string,
       cover_image_url: coverUrl || undefined,
-      type: formData.get("type") as string,
+      type: formData.get("type") as "news" | "blog" | "tournament_writeup" | "announcement",
       is_published: formData.get("is_published") === "on",
     }
 

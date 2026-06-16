@@ -1,5 +1,5 @@
-﻿import { redirect } from "next/navigation"
-import { Award, CheckCircle2, Clock, Plus } from "lucide-react"
+import { redirect } from "next/navigation"
+import { Award, CheckCircle2, Clock } from "lucide-react"
 
 import { createClient } from "@/lib/supabase/server"
 import { Badge } from "@/components/ui/badge"

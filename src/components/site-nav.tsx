@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import type { User } from "@supabase/supabase-js"
 import { signOut } from "@/lib/actions/auth"
 import { Menu, X, LogOut, User as UserIcon, LayoutDashboard, ChevronRight } from "lucide-react"
 
@@ -25,7 +26,19 @@ const NAV = [
   { href: "/gallery", label: "Gallery" },
 ]
 
-export function SiteNav({ user, profile }: { user: any; profile: any }) {
+export function SiteNav({
+  user,
+  profile,
+}: {
+  user: User | null
+  profile: {
+    id: string
+    full_name: string | null
+    slug: string | null
+    avatar_url: string | null
+    is_admin: boolean
+  } | null
+}) {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
@@ -38,7 +51,10 @@ export function SiteNav({ user, profile }: { user: any; profile: any }) {
   }, [])
 
   useEffect(() => {
-    setOpen(false)
+    const timer = setTimeout(() => {
+      setOpen(false)
+    }, 0)
+    return () => clearTimeout(timer)
   }, [pathname])
 
   useEffect(() => {
@@ -84,7 +100,7 @@ export function SiteNav({ user, profile }: { user: any; profile: any }) {
             >
               <div
                 className={`font-display truncate font-bold tracking-tight transition-all duration-500 ${
-                  transparent ? "text-[1.35rem] leading-none sm:text-[1.9rem]" : "text-[0.95rem] sm:text-sm"
+                  transparent ? "text-[1.35rem] leading-none sm:text-[1.9rem]" : "text-[0.95rem] sm:text-[1.15rem]"
                 }`}
               >
                 JUST Debate Club

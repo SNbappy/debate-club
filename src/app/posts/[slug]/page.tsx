@@ -4,6 +4,11 @@ import { ArrowLeft, Sparkles } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
 import { Reveal } from "@/components/home/animations"
 import ReactMarkdown from "react-markdown"
+import type { Post as DbPost, Profile } from "@/types/supabase"
+
+type PostWithProfile = DbPost & {
+  profiles: Pick<Profile, "full_name" | "slug"> | null
+}
 
 const TYPE_LABELS: Record<string, string> = {
   news: "News",
@@ -42,7 +47,8 @@ export default async function PostDetailPage({
 
   if (!post) notFound()
 
-  const author = (post as any).profiles
+  const postData = post as PostWithProfile
+  const author = postData.profiles
   const image = normalizeText(post.cover_image_url)
   const title = normalizeText(post.title) || "Untitled Post"
   const typeLabel = TYPE_LABELS[post.type] ?? post.type

@@ -41,10 +41,19 @@ function autoSlug(t: string): string {
     .slice(0, 100)
 }
 
-function normalize(input: any) {
+interface RawAlbumInput {
+  title?: string
+  slug?: string
+  description?: string
+  cover_image_url?: string
+  event_date?: string
+  is_published?: boolean | string
+}
+
+function normalize(input: RawAlbumInput) {
   return {
     ...input,
-    slug: input.slug || autoSlug(input.title),
+    slug: input.slug || autoSlug(input.title || ""),
     description: input.description || undefined,
     cover_image_url: input.cover_image_url || undefined,
     event_date: input.event_date || undefined,
@@ -112,7 +121,7 @@ async function normalizePhotoOrder(
 }
 
 export async function adminCreateAlbum(
-  input: any
+  input: RawAlbumInput
 ): Promise<{ error?: string; id?: string }> {
   const ctx = await requireAdmin()
   if ("error" in ctx) return { error: ctx.error }
@@ -146,7 +155,7 @@ export async function adminCreateAlbum(
 
 export async function adminUpdateAlbum(
   id: string,
-  input: any
+  input: RawAlbumInput
 ): Promise<{ error?: string }> {
   const ctx = await requireAdmin()
   if ("error" in ctx) return { error: ctx.error }

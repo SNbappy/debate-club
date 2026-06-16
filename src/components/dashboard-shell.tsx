@@ -1,6 +1,7 @@
-﻿"use client"
+"use client"
 
 import { useMemo, useState } from "react"
+import { motion } from "motion/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -15,14 +16,21 @@ import {
   X,
 } from "lucide-react"
 
+import type { User } from "@supabase/supabase-js"
 import { signOut } from "@/lib/actions/auth"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 type DashboardShellProps = {
   children: React.ReactNode
-  user: any
-  profile: any
+  user: User | null
+  profile: {
+    id: string
+    full_name: string | null
+    slug: string | null
+    avatar_url: string | null
+    is_admin: boolean
+  } | null
 }
 
 export function DashboardShell({
@@ -61,7 +69,7 @@ export function DashboardShell({
       .map((part: string) => part[0]?.toUpperCase())
       .join("") || "JD"
 
-  function UserCard() {
+  const renderUserCard = () => {
     return (
       <div className="rounded-[1.5rem] border border-white/10 bg-white/7 p-4 backdrop-blur-md">
         <p className="text-[10px] uppercase tracking-[0.24em] text-white/52">
@@ -91,7 +99,7 @@ export function DashboardShell({
     )
   }
 
-  function TopBarAvatar() {
+  const renderTopBarAvatar = () => {
     return (
       <Avatar className="size-11 rounded-2xl border border-[#0F1E3D]/10 shadow-sm">
         <AvatarImage
@@ -106,7 +114,7 @@ export function DashboardShell({
     )
   }
 
-  function NavLinks({ mobile = false }: { mobile?: boolean }) {
+  const renderNavLinks = (mobile = false) => {
     return (
       <nav className="space-y-1.5">
         {navItems.map((item) => {
@@ -189,11 +197,11 @@ export function DashboardShell({
             </Link>
 
             <div className="mt-8">
-              <UserCard />
+              {renderUserCard()}
             </div>
 
             <div className="mt-8 flex-1">
-              <NavLinks />
+              {renderNavLinks()}
             </div>
 
             <div className="mt-6 space-y-3">
@@ -249,14 +257,21 @@ export function DashboardShell({
                     {profile?.is_admin ? "Administrator" : "Member workspace"}
                   </div>
                 </div>
-                <TopBarAvatar />
+                {renderTopBarAvatar()}
               </div>
             </div>
           </header>
 
           <main className="flex-1 px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
             <div className="mx-auto w-full max-w-7xl">
-              {children}
+              <motion.div
+                key={pathname}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {children}
+              </motion.div>
             </div>
           </main>
         </div>
@@ -304,11 +319,11 @@ export function DashboardShell({
             </div>
 
             <div className="mt-8">
-              <UserCard />
+              {renderUserCard()}
             </div>
 
             <div className="mt-8 flex-1 overflow-y-auto">
-              <NavLinks mobile />
+              {renderNavLinks(true)}
             </div>
           </div>
         </div>

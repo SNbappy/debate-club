@@ -1,4 +1,4 @@
-﻿"use server"
+"use server"
 
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
@@ -35,11 +35,22 @@ function toISO(s: string | undefined): string | undefined {
   if (isNaN(d.getTime())) return undefined
   return d.toISOString()
 }
+interface RawEventInput {
+  title?: string
+  slug?: string
+  description?: string
+  event_date?: string
+  end_date?: string
+  location?: string
+  registration_url?: string
+  cover_image_url?: string
+  is_published?: boolean | string
+}
 
-function normalize(input: any) {
+function normalize(input: RawEventInput) {
   return {
     ...input,
-    slug: input.slug || autoSlug(input.title),
+    slug: input.slug || autoSlug(input.title || ""),
     description: input.description || undefined,
     location: input.location || undefined,
     registration_url: input.registration_url || undefined,
@@ -50,7 +61,7 @@ function normalize(input: any) {
   }
 }
 
-export async function adminCreateEvent(input: any): Promise<{ error?: string }> {
+export async function adminCreateEvent(input: RawEventInput): Promise<{ error?: string }> {
   const ctx = await requireAdmin()
   if ("error" in ctx) return { error: ctx.error }
   const parsed = eventSchema.safeParse(normalize(input))
@@ -71,7 +82,7 @@ export async function adminCreateEvent(input: any): Promise<{ error?: string }> 
   return {}
 }
 
-export async function adminUpdateEvent(id: string, input: any): Promise<{ error?: string }> {
+export async function adminUpdateEvent(id: string, input: RawEventInput): Promise<{ error?: string }> {
   const ctx = await requireAdmin()
   if ("error" in ctx) return { error: ctx.error }
   const parsed = eventSchema.safeParse(normalize(input))

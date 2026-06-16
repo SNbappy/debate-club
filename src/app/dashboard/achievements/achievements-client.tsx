@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useState, useTransition } from "react"
 import { createAchievement, updateAchievement, deleteAchievement } from "@/lib/actions/achievements"
@@ -125,7 +125,7 @@ export function AchievementsClient({ achievements }: { achievements: Achievement
         <div className="space-y-3">
           {achievements.map((a) => (
             <Card key={a.id}>
-              <CardHeader className="flex flex-row items-start justify-between gap-4">
+              <CardHeader className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <CardTitle className="text-lg">{a.title}</CardTitle>
                   <CardDescription className="flex flex-wrap items-center gap-2 mt-1">

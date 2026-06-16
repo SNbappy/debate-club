@@ -7,9 +7,10 @@ export function Reveal({
   children,
   delay = 0,
   className = "",
-  y = 10,
-  duration = 0.42,
+  y = 24,
+  duration = 0.6,
   amount = 0.12,
+  scale = 0.98,
 }: {
   children: React.ReactNode
   delay?: number
@@ -17,19 +18,20 @@ export function Reveal({
   y?: number
   duration?: number
   amount?: number
+  scale?: number
 }) {
   const shouldReduceMotion = useReducedMotion()
 
   return (
     <motion.div
       className={className}
-      initial={shouldReduceMotion ? false : { opacity: 0, y }}
-      whileInView={shouldReduceMotion ? {} : { opacity: 1, y: 0 }}
+      initial={shouldReduceMotion ? false : { opacity: 0, y, scale }}
+      whileInView={shouldReduceMotion ? {} : { opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, amount }}
       transition={
         shouldReduceMotion
           ? { duration: 0 }
-          : { duration, delay, ease: "easeOut" as const }
+          : { duration, delay, ease: [0.16, 1, 0.3, 1] }
       }
     >
       {children}
@@ -52,7 +54,6 @@ export function CountUp({
     const safeEnd = Number(end)
 
     if (!Number.isFinite(safeEnd) || safeEnd < 0) {
-      setValue(0)
       return
     }
 

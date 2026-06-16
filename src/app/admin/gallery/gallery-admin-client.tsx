@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useMemo, useState, useTransition } from "react"
 import {
@@ -33,7 +33,7 @@ import {
   Upload,
 } from "lucide-react"
 
-type Album = {
+export type Album = {
   id: string
   title: string
   slug: string

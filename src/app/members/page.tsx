@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Award, Sparkles, Users } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Reveal } from "@/components/home/animations";
 
