@@ -40,10 +40,11 @@ export function PageLoader() {
     <AnimatePresence>
       {show && (
         <motion.div
-          initial={{ y: 0 }}
+          initial={{ opacity: 1, scale: 1 }}
           exit={{ 
-            y: "-100%",
-            transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } 
+            opacity: 0,
+            scale: 1.03,
+            transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } 
           }}
           className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#081126] text-white"
         >
@@ -116,12 +117,12 @@ export function PageLoader() {
                 filter: "blur(0px)",
                 transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } 
               }}
-              className="flex size-24 items-center justify-center rounded-3xl border border-white/10 bg-white/8 p-4 shadow-[0_12px_40px_rgba(8,17,38,0.32)] backdrop-blur-md"
+              className="flex size-20 sm:size-24 items-center justify-center rounded-3xl border border-white/10 bg-white/8 p-3.5 sm:p-4 shadow-[0_12px_40px_rgba(8,17,38,0.32)] backdrop-blur-md"
             >
               <img
                 src="/logo.png"
                 alt="JUST Debate Club"
-                className="h-16 w-16 object-contain"
+                className="h-12 w-12 sm:h-16 sm:w-16 object-contain"
               />
             </motion.div>
 
@@ -133,7 +134,7 @@ export function PageLoader() {
                 y: 0,
                 transition: { delay: 0.45, duration: 0.6, ease: "easeOut" } 
               }}
-              className="mt-6 font-display text-[1.45rem] font-medium tracking-[0.32em] text-[#FCFAF6] text-center"
+              className="mt-6 font-display text-[1.15rem] sm:text-[1.45rem] font-medium tracking-[0.24em] sm:tracking-[0.32em] text-[#FCFAF6] text-center"
             >
               JUST DEBATE CLUB
             </motion.h1>
@@ -145,7 +146,7 @@ export function PageLoader() {
                 opacity: 0.58,
                 transition: { delay: 0.75, duration: 0.6 } 
               }}
-              className="mt-3 text-[10px] uppercase tracking-[0.24em] text-[#F6E7B8]"
+              className="mt-3 text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.24em] text-[#F6E7B8]"
             >
               Reason • Clarity • Conviction
             </motion.p>
