@@ -215,141 +215,269 @@ export default async function MemberProfilePage({
   }[]
 
   return (
-    <main className="bg-white text-[#0F1E3D]">
-      <section className="relative overflow-hidden -mt-16 text-white">
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,#0B1731_0%,#0F1E3D_58%,#112449_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_20%,rgba(255,255,255,0.07),transparent_18%),radial-gradient(circle_at_82%_16%,rgba(193,154,61,0.16),transparent_18%),radial-gradient(circle_at_50%_100%,rgba(8,17,38,0.62),transparent_35%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,30,61,0.94)_0%,rgba(15,30,61,0.78)_34%,rgba(15,30,61,0.44)_60%,rgba(15,30,61,0.76)_100%)]" />
-        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#081126]/55 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#FDF8EE] via-[#FDF8EE]/42 to-transparent" />
-
-        <div className="relative z-10 mx-auto max-w-6xl px-6 pt-28 pb-14 sm:pt-32 md:pt-36 md:pb-18">
+    <main className="min-h-screen bg-[#FDF8EE] text-[#0F1E3D] pb-16">
+      {/* 1. Cover Banner Section */}
+      <section className="relative h-44 sm:h-64 bg-[#081126] text-white -mt-16 overflow-hidden">
+        {/* Background Gradients */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(193,154,61,0.18),transparent_25%),radial-gradient(circle_at_80%_80%,rgba(255,255,255,0.06),transparent_20%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/40 to-transparent" />
+        
+        {/* "← All members" Back Link */}
+        <div className="absolute top-24 left-6 sm:left-12 z-20">
           <Reveal>
             <Link
               href="/members"
               className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/6 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/86 transition-all duration-300 hover:border-white/22 hover:bg-white/10 hover:text-white"
             >
-              <ArrowLeft className="size-4" />
+              <ArrowLeft className="size-3.5" />
               All members
             </Link>
           </Reveal>
+        </div>
+      </section>
 
-          <div className="mt-8 grid gap-8 lg:grid-cols-[0.88fr_1.12fr] lg:items-end lg:gap-14">
-            <Reveal delay={0.08}>
-              <div className="relative max-w-[28rem]">
-                <div className="relative overflow-hidden rounded-[1.9rem] border border-white/10 bg-[#132750] shadow-[0_32px_80px_rgba(0,0,0,0.28)]">
-                  <div className="aspect-[4/4.65] bg-[#102246]">
-                    {normalizeText(profile.avatar_url) ? (
-                      <img
-                        src={profile.avatar_url ?? undefined}
-                        alt={name}
-                        className="h-full w-full object-cover object-top"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_30%_25%,rgba(193,154,61,0.20),transparent_18%),linear-gradient(180deg,#132750_0%,#0F1E3D_100%)]">
-                        <div className="rounded-full border border-[#C19A3D]/30 bg-white/8 px-7 py-6 font-display text-[4.6rem] leading-none tracking-tight text-[#F5E7BF] backdrop-blur-sm sm:text-[5.4rem]">
-                          {initials}
-                        </div>
+      {/* 2. Profile Content Area */}
+      <div className="mx-auto max-w-6xl px-6 -mt-14 sm:-mt-20 relative z-10">
+        
+        {/* A. Profile Header Card */}
+        <Reveal delay={0.08}>
+          <div className="bg-white rounded-3xl border border-[#0F1E3D]/10 p-6 sm:p-8 shadow-[0_12px_40px_rgba(15,30,61,0.04)] relative overflow-hidden">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+              
+              {/* Avatar + Main Details */}
+              <div className="flex flex-col md:flex-row gap-6 md:items-end">
+                {/* Overlapping Avatar */}
+                <div className="relative size-28 sm:size-36 shrink-0 rounded-full border-4 border-white bg-[#102246] shadow-md overflow-hidden -mt-16 sm:-mt-20">
+                  {normalizeText(profile.avatar_url) ? (
+                    <img
+                      src={profile.avatar_url ?? undefined}
+                      alt={name}
+                      className="h-full w-full object-cover object-top"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_30%_25%,rgba(193,154,61,0.20),transparent_18%),linear-gradient(180deg,#132750_0%,#0F1E3D_100%)]">
+                      <div className="rounded-full border border-[#C19A3D]/30 bg-white/8 px-5 py-4 font-display text-[2.2rem] leading-none tracking-tight text-[#F5E7BF] backdrop-blur-sm sm:text-[3rem]">
+                        {initials}
                       </div>
-                    )}
-                  </div>
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,30,61,0.02)_0%,rgba(15,30,61,0.10)_42%,rgba(15,30,61,0.42)_100%)]" />
+                    </div>
+                  )}
                 </div>
 
-                <div className="absolute -bottom-5 left-5 rounded-[1.35rem] bg-[#C19A3D] px-4 py-3 sm:px-5 sm:py-4 text-black shadow-2xl">
-                  <div className="mb-1 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.2em]">
-                    Member profile
+                <div className="space-y-1">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-[#C19A3D]/15 bg-[#C19A3D]/5 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-[#C19A3D] font-bold">
+                    <Sparkles className="size-3" />
+                    Member Spotlight
                   </div>
-                  <div className="font-display text-xl sm:text-2xl font-bold tracking-tight leading-none">
-                    {roleLabel}
-                  </div>
+                  <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-[#0F1E3D]">
+                    {name}
+                  </h1>
+                  <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-[#C19A3D]">
+                    {displayTitle}
+                  </p>
                 </div>
               </div>
-            </Reveal>
 
-            <div className="max-w-3xl">
+              {/* Role badge */}
+              <div className="shrink-0 self-start md:self-end">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0F1E3D]/5 border border-[#0F1E3D]/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.2em] text-[#0F1E3D]">
+                  {roleLabel}
+                </span>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* B. Grid Columns */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8 items-start">
+          
+          {/* Main Content Column (Left, 2/3 width) */}
+          <div className="lg:col-span-2 space-y-8">
+            
+            {/* Bio/About Card */}
+            {normalizeText(profile.bio) ? (
               <Reveal delay={0.12}>
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-4 py-2 text-[11px] uppercase tracking-[0.24em] text-white/90 backdrop-blur-md md:text-xs">
-                  <Sparkles className="size-3 text-[#C19A3D]" />
-                  Member spotlight
-                </div>
-              </Reveal>
-
-              <Reveal delay={0.18}>
-                <h1 className="mt-6 max-w-4xl font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
-                  {name}
-                </h1>
-              </Reveal>
-
-              <Reveal delay={0.24}>
-                <p className="mt-4 text-[12px] font-semibold uppercase tracking-[0.24em] text-[#C19A3D]">
-                  {displayTitle}
-                </p>
-              </Reveal>
-
-              {normalizeText(profile.bio) ? (
-                <Reveal delay={0.3}>
-                  <p className="mt-6 max-w-2xl text-[1rem] leading-[1.85] text-white/80 md:text-[1.05rem]">
+                <section className="bg-white rounded-3xl border border-[#0F1E3D]/10 p-6 sm:p-8 shadow-sm">
+                  <h2 className="font-display text-lg sm:text-xl font-bold text-[#0F1E3D] border-b border-[#0F1E3D]/10 pb-3 mb-4">
+                    About
+                  </h2>
+                  <p className="text-sm leading-relaxed text-[#0F1E3D]/76 whitespace-pre-line">
                     {profile.bio}
                   </p>
-                </Reveal>
-              ) : null}
+                </section>
+              </Reveal>
+            ) : null}
 
-              {facts.length > 0 ? (
-                <Reveal delay={0.36}>
-                  <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            {/* Achievements Card */}
+            <Reveal delay={0.18}>
+              <section className="bg-white rounded-3xl border border-[#0F1E3D]/10 p-6 sm:p-8 shadow-sm">
+                <h2 className="font-display text-lg sm:text-xl font-bold text-[#0F1E3D] border-b border-[#0F1E3D]/10 pb-3 mb-6">
+                  Achievements & Milestones
+                </h2>
+
+                {!achievements || achievements.length === 0 ? (
+                  <div className="py-8 text-center text-[#0F1E3D]/50">
+                    <p className="text-sm">No verified achievements records found.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-8">
+                    {CATEGORY_ORDER.filter((category) => grouped[category]?.length).map((category) => (
+                      <div key={category} className="space-y-4">
+                        <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-[#C19A3D] border-l-2 border-[#C19A3D] pl-3">
+                          {CATEGORY_LABELS[category]}
+                        </h3>
+                        <div className="grid gap-4 pl-3.5">
+                          {grouped[category]!.map((achievement) => (
+                            <article
+                              key={achievement.id}
+                              className="group p-4 rounded-2xl border border-[#0F1E3D]/8 bg-[#FDF8EE]/40 hover:bg-[#FDF8EE]/80 transition-colors"
+                            >
+                              <div className="flex flex-col sm:flex-row justify-between gap-2">
+                                <div>
+                                  <h4 className="font-display text-base font-bold text-[#0F1E3D]">
+                                    {achievement.title}
+                                  </h4>
+                                  <div className="mt-1 flex flex-wrap gap-x-2 text-xs text-[#0F1E3D]/60">
+                                    {achievement.tournament_name ? <span>{achievement.tournament_name}</span> : null}
+                                    {achievement.tournament_year ? <span>• {achievement.tournament_year}</span> : null}
+                                    {achievement.position ? <span>• {achievement.position}</span> : null}
+                                  </div>
+                                </div>
+                                {achievement.achievement_date ? (
+                                  <span className="text-xs font-semibold text-[#0F1E3D]/40 shrink-0">
+                                    {formatDate(achievement.achievement_date)}
+                                  </span>
+                                ) : null}
+                              </div>
+                              {normalizeText(achievement.description) ? (
+                                <p className="mt-2 text-xs leading-relaxed text-[#0F1E3D]/70">
+                                  {achievement.description}
+                                </p>
+                              ) : null}
+                            </article>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </section>
+            </Reveal>
+
+            {/* Certificates Card */}
+            {certificates && certificates.length > 0 ? (
+              <Reveal delay={0.24}>
+                <section className="bg-white rounded-3xl border border-[#0F1E3D]/10 p-6 sm:p-8 shadow-sm">
+                  <h2 className="font-display text-lg sm:text-xl font-bold text-[#0F1E3D] border-b border-[#0F1E3D]/10 pb-3 mb-6">
+                    Verified Certificates
+                  </h2>
+                  <div className="grid gap-4">
+                    {certificates.map((certificate) => (
+                      <article
+                        key={certificate.id}
+                        className="rounded-2xl border border-[#0F1E3D]/8 bg-[#FDF8EE]/40 p-4 hover:bg-[#FDF8EE]/80 transition-colors"
+                      >
+                        <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+                          <div>
+                            <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C19A3D] mb-1">
+                              ID: {certificate.certificate_id}
+                            </div>
+                            <h3 className="font-display text-base font-bold text-[#0F1E3D]">
+                              {certificate.event_name}
+                            </h3>
+                            <div className="mt-1 flex flex-wrap gap-x-2 text-xs text-[#0F1E3D]/60">
+                              {certificate.issued_date ? <span>{certificate.issued_date}</span> : null}
+                              {certificate.issued_by ? <span>• by {certificate.issued_by}</span> : null}
+                            </div>
+                          </div>
+                          <Link
+                            href={`/verify/${certificate.certificate_id}`}
+                            target="_blank"
+                            className="inline-flex items-center gap-1.5 rounded-full border border-[#0F1E3D]/10 bg-white px-3.5 py-1.5 text-xs font-semibold text-[#0F1E3D] transition-colors hover:border-[#C19A3D]/40 hover:bg-[#fffaf0]"
+                          >
+                            Verify
+                            <ExternalLink className="size-3.5 text-[#C19A3D]" />
+                          </Link>
+                        </div>
+                        {normalizeText(certificate.achievement_description) ? (
+                          <p className="mt-2 text-xs leading-relaxed text-[#0F1E3D]/68 border-t border-[#0F1E3D]/5 pt-2">
+                            {certificate.achievement_description}
+                          </p>
+                        ) : null}
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              </Reveal>
+            ) : null}
+          </div>
+
+          {/* Sidebar Column (Right, 1/3 width) */}
+          <div className="space-y-8">
+            
+            {/* Quick Profile Facts Card */}
+            {facts.length > 0 ? (
+              <Reveal delay={0.28}>
+                <section className="bg-white rounded-3xl border border-[#0F1E3D]/10 p-6 shadow-sm">
+                  <h2 className="font-display text-base font-bold text-[#0F1E3D] border-b border-[#0F1E3D]/10 pb-3 mb-4">
+                    Member Details
+                  </h2>
+                  <div className="space-y-4">
                     {facts.map((fact) => {
                       const Icon = fact.icon
-
                       return (
-                        <div
-                          key={`${fact.label}-${fact.value}`}
-                          className="rounded-[1.35rem] border border-white/10 bg-white/7 px-5 py-4 backdrop-blur-md"
-                        >
-                          <div className="mb-2 flex items-center gap-2 text-[#C19A3D]">
+                        <div key={`${fact.label}-${fact.value}`} className="flex items-start gap-3">
+                          <div className="p-2.5 rounded-xl bg-[#FDF8EE] border border-[#0F1E3D]/5 text-[#C19A3D] shrink-0">
                             <Icon className="size-4" />
-                            <span className="text-[11px] font-semibold uppercase tracking-[0.22em]">
-                              {fact.label}
-                            </span>
                           </div>
-                          <div className="font-display text-base sm:text-lg font-bold text-white">
-                            {fact.value}
+                          <div>
+                            <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#0F1E3D]/40">
+                              {fact.label}
+                            </div>
+                            <div className="text-sm font-semibold text-[#0F1E3D]">
+                              {fact.value}
+                            </div>
                           </div>
                         </div>
                       )
                     })}
                   </div>
-                </Reveal>
-              ) : null}
+                </section>
+              </Reveal>
+            ) : null}
 
-              {(socials.length > 0 || showEmail || showPhone) && (
-                <Reveal delay={0.42}>
-                  <div className="mt-8 flex flex-wrap gap-3 text-sm">
+            {/* Socials & Contact Directory Card */}
+            {(socials.length > 0 || showEmail || showPhone) && (
+              <Reveal delay={0.34}>
+                <section className="bg-white rounded-3xl border border-[#0F1E3D]/10 p-6 shadow-sm">
+                  <h2 className="font-display text-base font-bold text-[#0F1E3D] border-b border-[#0F1E3D]/10 pb-3 mb-4">
+                    Contact & Social Links
+                  </h2>
+                  <div className="flex flex-col gap-2.5">
                     {showEmail ? (
                       <a
                         href={`mailto:${profile.email}`}
-                        className="group inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-white transition-all duration-300 bg-[#C19A3D]/10 border-[#C19A3D]/20 hover:bg-[#C19A3D] hover:text-[#0F1E3D] hover:border-[#C19A3D] hover:shadow-[0_0_15px_rgba(193,154,61,0.4)]"
+                        className="group inline-flex items-center gap-2.5 rounded-full border px-4 py-2 text-xs font-semibold text-[#0F1E3D] transition-all duration-300 bg-[#C19A3D]/8 border-[#C19A3D]/20 hover:bg-[#C19A3D] hover:text-[#0F1E3D] hover:shadow-[0_0_12px_rgba(193,154,61,0.25)]"
                       >
                         <Mail className="size-4 text-[#C19A3D] group-hover:text-[#0F1E3D] transition-colors" />
-                        {profile.email}
+                        <span className="truncate">{profile.email}</span>
                       </a>
                     ) : null}
 
                     {showPhone ? (
                       <a
                         href={`tel:${profile.phone}`}
-                        className="group inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-white transition-all duration-300 bg-emerald-500/10 border-emerald-500/20 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.4)]"
+                        className="group inline-flex items-center gap-2.5 rounded-full border px-4 py-2 text-xs font-semibold text-[#0F1E3D] transition-all duration-300 bg-emerald-500/8 border-emerald-500/20 hover:bg-emerald-500 hover:border-emerald-500 hover:text-white hover:shadow-[0_0_12px_rgba(16,185,129,0.25)]"
                       >
-                        <Phone className="size-4 text-emerald-400 group-hover:text-white transition-colors" />
-                        {profile.phone}
+                        <Phone className="size-4 text-emerald-600 group-hover:text-white transition-colors" />
+                        <span>{profile.phone}</span>
                       </a>
                     ) : null}
 
                     {socials.map((social) => {
                       const Icon = social.icon
                       const style = SOCIAL_STYLES[social.label] || {
-                        btnClass: "bg-white/8 border-white/14 hover:bg-white/12 hover:border-white/24 text-white",
-                        iconColor: "text-[#C19A3D] group-hover:text-white"
+                        btnClass: "bg-[#0F1E3D]/5 border-[#0F1E3D]/15 hover:bg-[#0F1E3D] hover:border-[#0F1E3D] hover:text-white",
+                        iconColor: "text-[#0F1E3D] group-hover:text-white"
                       }
 
                       return (
@@ -358,175 +486,20 @@ export default async function MemberProfilePage({
                           href={social.url ?? undefined}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={`group inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-white transition-all duration-300 ${style.btnClass}`}
+                          className={`group inline-flex items-center gap-2.5 rounded-full border px-4 py-2 text-xs font-semibold text-[#0F1E3D] transition-all duration-300 ${style.btnClass}`}
                         >
                           <Icon className={`size-4 transition-colors ${style.iconColor}`} />
-                          {social.label}
+                          <span>{social.label}</span>
                         </a>
                       )
                     })}
                   </div>
-                </Reveal>
-              )}
-            </div>
+                </section>
+              </Reveal>
+            )}
           </div>
         </div>
-      </section>
-
-      <section className="relative overflow-hidden bg-[#FDF8EE] py-16 sm:py-20 md:py-24">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(193,154,61,0.10),transparent_24%),radial-gradient(circle_at_86%_20%,rgba(15,30,61,0.06),transparent_20%)]" />
-        <div className="relative mx-auto max-w-6xl px-6">
-          <Reveal>
-            <div className="mb-10 max-w-2xl">
-              <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#C19A3D]">
-                Achievements
-              </div>
-              <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#0F1E3D] leading-tight">
-                Verified milestones and competitive highlights.
-              </h2>
-            </div>
-          </Reveal>
-
-          {!achievements || achievements.length === 0 ? (
-            <Reveal delay={0.08}>
-              <div className="rounded-[1.6rem] border border-[#0F1E3D]/10 bg-white p-8 text-center shadow-[0_18px_44px_rgba(15,30,61,0.06)]">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
-                  Records
-                </div>
-                <h3 className="mt-3 font-display text-xl sm:text-2xl font-bold tracking-tight text-[#0F1E3D]">
-                  No verified achievements yet
-                </h3>
-                <p className="mt-4 text-sm leading-7 text-[#0F1E3D]/66">
-                  Public achievement records will appear here as the member profile grows.
-                </p>
-              </div>
-            </Reveal>
-          ) : (
-            <div className="space-y-10">
-              {CATEGORY_ORDER.filter((category) => grouped[category]?.length).map((category, categoryIndex) => (
-                <Reveal key={category} delay={0.06 + categoryIndex * 0.05}>
-                  <section>
-                    <div className="mb-5 flex items-end justify-between gap-4 border-b border-[#0F1E3D]/10 pb-4">
-                      <div>
-                        <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#C19A3D]">
-                          Category
-                        </div>
-                        <h3 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-[#0F1E3D] leading-none">
-                          {CATEGORY_LABELS[category]}
-                        </h3>
-                      </div>
-                      <div className="text-sm text-[#0F1E3D]/52">
-                        {grouped[category]!.length} item{grouped[category]!.length > 1 ? "s" : ""}
-                      </div>
-                    </div>
-
-                    <div className="grid gap-4">
-                      {grouped[category]!.map((achievement, itemIndex) => (
-                        <Reveal key={achievement.id} delay={0.08 + itemIndex * 0.03}>
-                          <article className="group overflow-hidden rounded-[1.55rem] border border-[#0F1E3D]/10 bg-white shadow-[0_12px_34px_rgba(15,30,61,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_46px_rgba(15,30,61,0.08)]">
-                            <div className="grid gap-5 p-5 sm:p-6 md:grid-cols-[0.92fr_1.08fr] md:gap-8">
-                              <div>
-                                <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
-                                  Highlight
-                                </div>
-                                <h4 className="font-display text-lg sm:text-xl font-bold tracking-tight text-[#0F1E3D] leading-snug">
-                                  {achievement.title}
-                                </h4>
-                              </div>
-
-                              <div>
-                                <div className="flex flex-wrap gap-x-3 gap-y-2 text-sm text-[#0F1E3D]/62">
-                                  {achievement.tournament_name ? <span>{achievement.tournament_name}</span> : null}
-                                  {achievement.tournament_year ? <span>• {achievement.tournament_year}</span> : null}
-                                  {achievement.position ? <span>• {achievement.position}</span> : null}
-                                  {achievement.achievement_date ? (
-                                    <span>• {formatDate(achievement.achievement_date)}</span>
-                                  ) : null}
-                                </div>
-
-                                {normalizeText(achievement.description) ? (
-                                  <p className="mt-4 text-[15px] leading-7 text-[#0F1E3D]/70">
-                                    {achievement.description}
-                                  </p>
-                                ) : null}
-                              </div>
-                            </div>
-                          </article>
-                        </Reveal>
-                      ))}
-                    </div>
-                  </section>
-                </Reveal>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {certificates && certificates.length > 0 ? (
-        <section className="relative overflow-hidden bg-white py-16 sm:py-20 md:py-24">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,rgba(193,154,61,0.08),transparent_26%),linear-gradient(180deg,rgba(253,248,238,0.42)_0%,rgba(255,255,255,1)_26%)]" />
-          <div className="relative mx-auto max-w-6xl px-6">
-            <Reveal>
-              <div className="mb-10 grid gap-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-end">
-                <div className="max-w-xl">
-                  <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#C19A3D]">
-                    <Award className="size-4" />
-                    Certificates
-                  </div>
-                  <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#0F1E3D] leading-tight">
-                    Verified records issued through club activity.
-                  </h2>
-                </div>
-                <p className="max-w-2xl text-base leading-8 text-[#0F1E3D]/68 lg:justify-self-end">
-                  Certificate entries remain connected to their verification pages so achievements can stay public, traceable, and easy to confirm.
-                </p>
-              </div>
-            </Reveal>
-
-            <div className="grid gap-4">
-              {certificates.map((certificate, index) => (
-                <Reveal key={certificate.id} delay={0.05 + index * 0.03}>
-                  <article className="rounded-[1.55rem] border border-[#0F1E3D]/10 bg-[#FDF8EE] p-5 shadow-[0_12px_34px_rgba(15,30,61,0.04)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_46px_rgba(15,30,61,0.07)] sm:p-6">
-                    <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-                      <div className="min-w-0 flex-1">
-                        <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
-                          Certificate ID · {certificate.certificate_id}
-                        </div>
-                        <h3 className="font-display text-lg sm:text-xl font-semibold tracking-tight text-[#0F1E3D] leading-snug">
-                          {certificate.event_name}
-                        </h3>
-
-                        <div className="mt-3 flex flex-wrap gap-x-3 gap-y-2 text-sm text-[#0F1E3D]/60">
-                          {certificate.issued_date ? <span>{certificate.issued_date}</span> : null}
-                          {certificate.issued_by ? <span>• by {certificate.issued_by}</span> : null}
-                        </div>
-
-                        {normalizeText(certificate.achievement_description) ? (
-                          <p className="mt-4 text-[15px] leading-7 text-[#0F1E3D]/68">
-                            {certificate.achievement_description}
-                          </p>
-                        ) : null}
-                      </div>
-
-                      <div className="md:shrink-0">
-                        <Link
-                          href={`/verify/${certificate.certificate_id}`}
-                          target="_blank"
-                          className="inline-flex items-center gap-2 rounded-full border border-[#0F1E3D]/12 bg-white px-4 py-2.5 text-sm font-semibold text-[#0F1E3D] transition-all duration-300 hover:border-[#C19A3D]/40 hover:bg-[#fffaf0]"
-                        >
-                          Verify certificate
-                          <ExternalLink className="size-4 text-[#C19A3D]" />
-                        </Link>
-                      </div>
-                    </div>
-                  </article>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : null}
+      </div>
     </main>
   )
 }
