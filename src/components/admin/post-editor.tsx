@@ -149,12 +149,21 @@ export function PostEditor({ post, basePath }: PostEditorProps) {
                       "secure_url" in info &&
                       typeof info.secure_url === "string"
                     ) {
-                      setCoverUrl(info.secure_url)
+                      const btn = document.getElementById("post-cloudinary-upload-btn");
+                      if (btn) btn.dataset.uploadedUrl = info.secure_url;
+                    }
+                  }}
+                  onClose={() => {
+                    const btn = document.getElementById("post-cloudinary-upload-btn");
+                    if (btn && btn.dataset.uploadedUrl) {
+                      setCoverUrl(btn.dataset.uploadedUrl);
+                      btn.dataset.uploadedUrl = "";
                     }
                   }}
                 >
                   {({ open: openWidget }) => (
                     <Button
+                      id="post-cloudinary-upload-btn"
                       type="button"
                       variant="outline"
                       onClick={() => openWidget?.()}

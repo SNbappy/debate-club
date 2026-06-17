@@ -176,12 +176,23 @@ export function AchievementEditor({
                       "secure_url" in info &&
                       typeof info.secure_url === "string"
                     ) {
-                      setImageUrl(info.secure_url)
+                      // We store it in a data attribute on the button to retrieve on close
+                      // Because state updates inside onSuccess can cause issues if we want to wait for close
+                      const btn = document.getElementById("cloudinary-upload-btn");
+                      if (btn) btn.dataset.uploadedUrl = info.secure_url;
+                    }
+                  }}
+                  onClose={() => {
+                    const btn = document.getElementById("cloudinary-upload-btn");
+                    if (btn && btn.dataset.uploadedUrl) {
+                      setImageUrl(btn.dataset.uploadedUrl);
+                      btn.dataset.uploadedUrl = ""; // reset
                     }
                   }}
                 >
                   {({ open: openWidget }) => (
                     <Button
+                      id="cloudinary-upload-btn"
                       type="button"
                       variant="outline"
                       onClick={() => openWidget?.()}

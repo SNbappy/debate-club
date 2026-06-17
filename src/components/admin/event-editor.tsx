@@ -186,12 +186,21 @@ export function EventEditor({
                       "secure_url" in info &&
                       typeof info.secure_url === "string"
                     ) {
-                      setCoverUrl(info.secure_url)
+                      const btn = document.getElementById("event-cloudinary-upload-btn");
+                      if (btn) btn.dataset.uploadedUrl = info.secure_url;
+                    }
+                  }}
+                  onClose={() => {
+                    const btn = document.getElementById("event-cloudinary-upload-btn");
+                    if (btn && btn.dataset.uploadedUrl) {
+                      setCoverUrl(btn.dataset.uploadedUrl);
+                      btn.dataset.uploadedUrl = "";
                     }
                   }}
                 >
                   {({ open: openWidget }) => (
                     <Button
+                      id="event-cloudinary-upload-btn"
                       type="button"
                       variant="outline"
                       onClick={() => openWidget?.()}
