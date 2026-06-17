@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Trophy, Award, Users, Calendar, Medal, ArrowRight } from "lucide-react"
+import { Trophy, Calendar, Medal, ArrowRight } from "lucide-react"
 
 import { createClient } from "@/lib/supabase/server"
 import { Reveal } from "@/components/home/animations"
@@ -54,18 +54,6 @@ export default async function AchievementsPage({
   const { data: rawAchievements } = await query.order("created_at", { ascending: false })
   const achievements = (rawAchievements ?? []) as unknown as Achievement[]
 
-  // Calculate statistics for the header
-  const { data: allVerified } = await supabase
-    .from("achievements")
-    .select("category, profile_id")
-    .eq("is_verified", true)
-
-  const stats = {
-    total: allVerified?.length ?? 0,
-    teams: allVerified?.filter((a) => a.category === "team_result").length ?? 0,
-    speakers: allVerified?.filter((a) => a.category === "speaker_award").length ?? 0,
-    members: new Set(allVerified?.map((a) => a.profile_id).filter(Boolean)).size,
-  }
 
   return (
     <main className="bg-white text-[#0F1E3D]">
@@ -119,39 +107,7 @@ export default async function AchievementsPage({
               </div>
 
               <Reveal delay={0.36}>
-                <div className="grid gap-4 grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
-                  <div className="rounded-[1.3rem] border border-white/10 bg-white/7 px-4 py-4 backdrop-blur-md">
-                    <div className="mb-1.5 flex items-center gap-1.5 text-[#C19A3D]">
-                      <Trophy className="size-3.5" />
-                      <span className="text-[9px] font-semibold uppercase tracking-[0.2em]">Total</span>
-                    </div>
-                    <div className="text-2xl font-bold text-white">{stats.total}</div>
-                  </div>
-
-                  <div className="rounded-[1.3rem] border border-white/10 bg-white/7 px-4 py-4 backdrop-blur-md">
-                    <div className="mb-1.5 flex items-center gap-1.5 text-[#C19A3D]">
-                      <Award className="size-3.5" />
-                      <span className="text-[9px] font-semibold uppercase tracking-[0.2em]">Teams</span>
-                    </div>
-                    <div className="text-2xl font-bold text-white">{stats.teams}</div>
-                  </div>
-
-                  <div className="rounded-[1.3rem] border border-white/10 bg-white/7 px-4 py-4 backdrop-blur-md">
-                    <div className="mb-1.5 flex items-center gap-1.5 text-[#C19A3D]">
-                      <Medal className="size-3.5" />
-                      <span className="text-[9px] font-semibold uppercase tracking-[0.2em]">Speakers</span>
-                    </div>
-                    <div className="text-2xl font-bold text-white">{stats.speakers}</div>
-                  </div>
-
-                  <div className="rounded-[1.3rem] border border-white/10 bg-white/7 px-4 py-4 backdrop-blur-md">
-                    <div className="mb-1.5 flex items-center gap-1.5 text-[#C19A3D]">
-                      <Users className="size-3.5" />
-                      <span className="text-[9px] font-semibold uppercase tracking-[0.2em]">Debaters</span>
-                    </div>
-                    <div className="text-2xl font-bold text-white">{stats.members}</div>
-                  </div>
-                </div>
+                <div className="hidden lg:block lg:w-32 xl:w-48"></div>
               </Reveal>
             </div>
           </div>
