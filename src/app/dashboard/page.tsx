@@ -29,17 +29,8 @@ export default async function DashboardPage() {
     .eq("id", user.id)
     .single()
 
-  const [{ count: achCount }, { count: pendingAch }, { count: certCount }] =
+  const [{ count: certCount }] =
     await Promise.all([
-      supabase
-        .from("achievements")
-        .select("*", { count: "exact", head: true })
-        .eq("profile_id", user.id),
-      supabase
-        .from("achievements")
-        .select("*", { count: "exact", head: true })
-        .eq("profile_id", user.id)
-        .eq("is_verified", false),
       supabase
         .from("certificates")
         .select("*", { count: "exact", head: true })
@@ -69,7 +60,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-3">
         {/* Account Status Card */}
         <div className="rounded-2xl border border-[#0F1E3D]/8 bg-white p-5 shadow-sm transition-all hover:shadow-md">
           <p className="text-[11px] font-bold uppercase tracking-wider text-[#0F1E3D]/40">Status</p>
@@ -94,20 +85,6 @@ export default async function DashboardPage() {
           <div className="mt-3 flex items-center justify-between">
             <span className="text-2xl font-bold text-[#0F1E3D]">{completionPercent}%</span>
             <UserCircle2 className="size-5 text-[#C19A3D]" />
-          </div>
-        </div>
-
-        {/* Achievements Card */}
-        <div className="rounded-2xl border border-[#0F1E3D]/8 bg-white p-5 shadow-sm transition-all hover:shadow-md">
-          <p className="text-[11px] font-bold uppercase tracking-wider text-[#0F1E3D]/40">Achievements</p>
-          <div className="mt-3 flex items-center justify-between">
-            <span className="text-2xl font-bold text-[#0F1E3D]">{achCount ?? 0}</span>
-            <div className="flex items-center gap-1">
-              <Award className="size-5 text-[#C19A3D]" />
-              {pendingAch && pendingAch > 0 ? (
-                <span className="text-xs font-semibold text-amber-600">({pendingAch} pending)</span>
-              ) : null}
-            </div>
           </div>
         </div>
 
@@ -142,30 +119,6 @@ export default async function DashboardPage() {
           <div className="mt-6 flex items-center justify-between border-t border-[#0F1E3D]/5 pt-4">
             <span className="text-xs font-bold uppercase tracking-wider text-[#C19A3D]">
               Edit Profile
-            </span>
-            <ArrowRight className="size-4 text-[#0F1E3D]/40 transition-transform group-hover:translate-x-1" />
-          </div>
-        </Link>
-
-        {/* Achievements Card */}
-        <Link
-          href="/dashboard/achievements"
-          className="group flex flex-col justify-between rounded-3xl border border-[#0F1E3D]/8 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#C19A3D]/40 hover:shadow-md"
-        >
-          <div>
-            <div className="flex size-12 items-center justify-center rounded-2xl bg-[#C19A3D]/10 text-[#C19A3D]">
-              <Award className="size-6" />
-            </div>
-            <h3 className="mt-5 font-display text-xl font-bold text-[#0F1E3D]">
-              Debate Record
-            </h3>
-            <p className="mt-2 text-sm text-[#0F1E3D]/50 leading-relaxed">
-              Add and manage your tournament wins, speaker awards, and adjudications.
-            </p>
-          </div>
-          <div className="mt-6 flex items-center justify-between border-t border-[#0F1E3D]/5 pt-4">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#C19A3D]">
-              Manage Achievements
             </span>
             <ArrowRight className="size-4 text-[#0F1E3D]/40 transition-transform group-hover:translate-x-1" />
           </div>
