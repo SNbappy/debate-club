@@ -1,9 +1,8 @@
 import Link from "next/link"
-import { Trophy, Award, Users, Calendar, Medal } from "lucide-react"
+import { Trophy, Award, Users, Calendar, Medal, ArrowRight } from "lucide-react"
 
 import { createClient } from "@/lib/supabase/server"
 import { Reveal } from "@/components/home/animations"
-import { Badge } from "@/components/ui/badge"
 
 const CATEGORY_LABELS: Record<string, string> = {
   speaker_award: "Speaker Award",
@@ -31,6 +30,7 @@ type Achievement = {
   position: string | null
   achievement_date: string | null
   description: string | null
+  image_url: string | null
 }
 
 export default async function AchievementsPage({
@@ -44,7 +44,7 @@ export default async function AchievementsPage({
   const supabase = await createClient()
   let query = supabase
     .from("achievements")
-    .select("id, title, category, tournament_name, tournament_year, position, achievement_date, description")
+    .select("id, title, category, tournament_name, tournament_year, position, achievement_date, description, image_url")
     .eq("is_verified", true)
 
   if (category) {
@@ -191,45 +191,76 @@ export default async function AchievementsPage({
                 const typeLabel = CATEGORY_LABELS[ach.category] ?? ach.category
                 return (
                   <Reveal key={ach.id} delay={index * 0.05}>
-                    <article className="flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-[#0F1E3D]/10 bg-white p-6 shadow-[0_10px_30px_rgba(15,30,61,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_50px_rgba(15,30,61,0.1)]">
-                      <div>
-                        <div className="flex items-center justify-between gap-3">
-                          <span className="rounded-full border border-[#C19A3D]/30 bg-[#FFFDF8] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-[#C19A3D]">
-                            {typeLabel}
-                          </span>
-                          {ach.tournament_year && (
-                            <span className="flex items-center gap-1 text-xs text-[#0F1E3D]/50 font-medium">
-                              <Calendar className="size-3.5" />
-                              {ach.tournament_year}
-                            </span>
+                    <Link href={`/achievements/${ach.id}`} className="group block h-full">
+                      <article className="flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-[#0F1E3D]/10 bg-white shadow-[0_10px_30px_rgba(15,30,61,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_50px_rgba(15,30,61,0.1)]">
+                        {ach.image_url ? (
+                          <div className="relative h-48 w-full overflow-hidden border-b border-[#0F1E3D]/10">
+                            <img
+                              src={ach.image_url}
+                              alt={ach.title}
+                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0F1E3D]/40 to-transparent" />
+                            <div className="absolute bottom-3 left-3">
+                              <span className="rounded-full border border-white/20 bg-white/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur-md">
+                                {typeLabel}
+                              </span>
+                            </div>
+                          </div>
+                        ) : null}
+                        
+                        <div className="flex flex-col flex-1 p-6">
+                          {!ach.image_url && (
+                            <div className="mb-4 flex items-center justify-between gap-3">
+                              <span className="rounded-full border border-[#C19A3D]/30 bg-[#FFFDF8] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-[#C19A3D]">
+                                {typeLabel}
+                              </span>
+                              {ach.tournament_year && (
+                                <span className="flex items-center gap-1 text-xs text-[#0F1E3D]/50 font-medium">
+                                  <Calendar className="size-3.5" />
+                                  {ach.tournament_year}
+                                </span>
+                              )}
+                            </div>
                           )}
+
+                          {ach.image_url && ach.tournament_year && (
+                             <div className="mb-2 flex items-center gap-1 text-xs text-[#0F1E3D]/50 font-medium">
+                               <Calendar className="size-3.5" />
+                               {ach.tournament_year}
+                             </div>
+                          )}
+
+                          <h3 className="font-display text-[1.45rem] font-bold leading-snug text-[#0F1E3D] transition-colors group-hover:text-[#C19A3D]">
+                            {ach.title}
+                          </h3>
+
+                          {ach.tournament_name && (
+                            <p className="mt-1 text-sm font-semibold text-[#0F1E3D]/70">
+                              {ach.tournament_name}
+                            </p>
+                          )}
+
+                          {ach.position && (
+                            <p className="mt-1.5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#C19A3D]">
+                              <Medal className="size-3.5" />
+                              {ach.position}
+                            </p>
+                          )}
+
+                          {ach.description && (
+                            <p className="mt-3.5 line-clamp-3 text-sm leading-relaxed text-[#0F1E3D]/60 flex-1">
+                              {ach.description}
+                            </p>
+                          )}
+
+                          <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-[#0F1E3D] transition-colors group-hover:text-[#C19A3D]">
+                            View details
+                            <ArrowRight className="size-4" />
+                          </div>
                         </div>
-
-                        <h3 className="mt-4 font-display text-[1.45rem] font-bold leading-snug text-[#0F1E3D]">
-                          {ach.title}
-                        </h3>
-
-                        {ach.tournament_name && (
-                          <p className="mt-1 text-sm font-semibold text-[#0F1E3D]/70">
-                            {ach.tournament_name}
-                          </p>
-                        )}
-
-                        {ach.position && (
-                          <p className="mt-1.5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#C19A3D]">
-                            <Medal className="size-3.5" />
-                            {ach.position}
-                          </p>
-                        )}
-
-                        {ach.description && (
-                          <p className="mt-3.5 text-sm leading-relaxed text-[#0F1E3D]/60">
-                            {ach.description}
-                          </p>
-                        )}
-                      </div>
-
-                    </article>
+                      </article>
+                    </Link>
                   </Reveal>
                 )
               })}

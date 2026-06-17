@@ -1,6 +1,6 @@
 "use client"
 
-import { useTransition } from "react"
+import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { createAchievement, updateAchievement } from "@/lib/actions/achievements"
 import { Button } from "@/components/ui/button"
@@ -15,6 +15,9 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { toast } from "sonner"
+import { CldUploadWidget } from "next-cloudinary"
+import { Upload } from "lucide-react"
+import { cloudinaryUploadWidgetStyles } from "@/lib/cloudinary"
 import type { Achievement } from "@/types/supabase"
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -34,8 +37,13 @@ export function AchievementEditor({
 }) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
+  const [imageUrl, setImageUrl] = useState<string | null>(achievement?.image_url ?? null)
 
   function handleSubmit(formData: FormData) {
+    if (imageUrl) {
+      formData.append("image_url", imageUrl)
+    }
+
     startTransition(async () => {
       const result = achievement
         ? await updateAchievement(achievement.id, formData)
@@ -136,6 +144,78 @@ export function AchievementEditor({
             placeholder="e.g. 1st Place, Quarterfinalist..."
             className="h-12 rounded-xl border-[#0F1E3D]/12 bg-[#FCFCFD] px-4 text-[15px] shadow-sm transition-colors focus:bg-white"
           />
+        </div>
+
+        <div className="space-y-4 sm:col-span-2">
+          <Label className="text-sm font-semibold text-[#0F1E3D]">Achievement Image</Label>
+
+          <div className="rounded-[24px] border border-dashed border-[#0F1E3D]/15 bg-[#F8F8FA] p-6 transition-colors hover:border-[#0F1E3D]/30">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <div className="font-medium text-[#0F1E3D]">Upload image</div>
+                <p className="mt-1 text-sm text-[#0F1E3D]/60">
+                  PNG, JPG, or WebP up to 5MB.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <CldUploadWidget
+                  uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
+                  options={{
+                    maxFiles: 1,
+                    clientAllowedFormats: ["png", "jpg", "jpeg", "webp"],
+                    maxFileSize: 5000000,
+                    singleUploadAutoClose: false,
+                    styles: cloudinaryUploadWidgetStyles,
+                  }}
+                  onSuccess={(result) => {
+                    const info = result.info
+                    if (
+                      info &&
+                      typeof info === "object" &&
+                      "secure_url" in info &&
+                      typeof info.secure_url === "string"
+                    ) {
+                      setImageUrl(info.secure_url)
+                    }
+                  }}
+                >
+                  {({ open: openWidget }) => (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => openWidget?.()}
+                      className="h-11 rounded-xl border-[#0F1E3D]/12 bg-white px-5 shadow-sm"
+                    >
+                      <Upload className="mr-2 size-4" />
+                      {imageUrl ? "Replace image" : "Upload image"}
+                    </Button>
+                  )}
+                </CldUploadWidget>
+
+                {imageUrl && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setImageUrl(null)}
+                    className="h-11 rounded-xl border-red-200 bg-red-50 px-5 text-red-600 hover:bg-red-100 hover:text-red-700 shadow-sm"
+                  >
+                    Remove
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {imageUrl && (
+              <div className="mt-6 overflow-hidden rounded-[20px] border border-[#0F1E3D]/10 bg-white shadow-sm">
+                <img
+                  src={imageUrl}
+                  alt="Achievement preview"
+                  className="h-64 w-full object-cover"
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="space-y-3 sm:col-span-2">

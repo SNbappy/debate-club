@@ -13,6 +13,7 @@ const achievementSchema = z.object({
   tournament_year: z.number().int().min(1900).max(2100).optional(),
   position: z.string().max(100).optional(),
   achievement_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date").optional(),
+  image_url: z.string().url().optional(),
 })
 
 async function requireAdmin() {
