@@ -176,7 +176,7 @@ export default async function EventsPage() {
         <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#081126]/55 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#FDF8EE] via-[#FDF8EE]/42 to-transparent" />
         <div className="relative z-10 mx-auto max-w-6xl px-6 pt-28 pb-14 sm:pt-32 md:pt-36 md:pb-16">
-          <div className="grid gap-8 lg:grid-cols-[1.06fr_0.94fr] lg:items-end">
+          <div>
             <div className="max-w-4xl">
               <Reveal>
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-4 py-2 text-[11px] uppercase tracking-[0.24em] text-white/90 backdrop-blur-md md:text-xs">
@@ -199,25 +199,6 @@ export default async function EventsPage() {
                 </p>
               </Reveal>
             </div>
-            <Reveal delay={0.4}>
-              <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-                <div className="rounded-[1.3rem] border border-white/10 bg-white/7 px-5 py-5 backdrop-blur-md">
-                  <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#C19A3D]">Published</div>
-                  <div className="text-3xl font-bold text-white">{data?.length ?? 0}</div>
-                </div>
-                <div className="rounded-[1.3rem] border border-white/10 bg-white/7 px-5 py-5 backdrop-blur-md">
-                  <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#C19A3D]">Upcoming</div>
-                  <div className="text-3xl font-bold text-white">{upcoming.length}</div>
-                </div>
-                <div className="rounded-[1.3rem] border border-white/10 bg-white/7 px-5 py-5 backdrop-blur-md">
-                  <div className="mb-2 flex items-center gap-2 text-[#C19A3D]">
-                    <Clock3 className="size-4" />
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.24em]">Archive</span>
-                  </div>
-                  <div className="text-3xl font-bold text-white">{past.length}</div>
-                </div>
-              </div>
-            </Reveal>
           </div>
         </div>
       </section>

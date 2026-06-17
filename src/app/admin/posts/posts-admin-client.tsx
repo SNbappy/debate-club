@@ -1,32 +1,9 @@
 "use client"
 
-import { useMemo, useState, useTransition } from "react"
-import {
-  adminCreatePost,
-  adminDeletePost,
-  adminUpdatePost,
-} from "@/lib/actions/posts"
+import { useMemo, useTransition } from "react"
+import { adminDeletePost } from "@/lib/actions/posts"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { CldUploadWidget } from "next-cloudinary"
 import { toast } from "sonner"
 import Link from "next/link"
 import {
@@ -37,7 +14,6 @@ import {
   Pencil,
   Plus,
   Trash2,
-  Upload,
 } from "lucide-react"
 
 type Post = {
@@ -73,10 +49,13 @@ function formatPostDate(value: string | null) {
   }).format(date)
 }
 
-export function PostsAdminClient({ posts }: { posts: Post[] }) {
-  const [open, setOpen] = useState(false)
-  const [editing, setEditing] = useState<Post | null>(null)
-  const [coverUrl, setCoverUrl] = useState<string | null>(null)
+export function PostsAdminClient({
+  posts,
+  basePath,
+}: {
+  posts: Post[]
+  basePath: string
+}) {
   const [isPending, startTransition] = useTransition()
 
   const sortedPosts = useMemo(
@@ -98,49 +77,6 @@ export function PostsAdminClient({ posts }: { posts: Post[] }) {
     () => sortedPosts.filter((post) => !post.is_published),
     [sortedPosts]
   )
-
-  function openNew() {
-    setEditing(null)
-    setCoverUrl(null)
-    setOpen(true)
-  }
-
-  function openEdit(post: Post) {
-    setEditing(post)
-    setCoverUrl(post.cover_image_url)
-    setOpen(true)
-  }
-
-  function closeAll() {
-    setOpen(false)
-    setEditing(null)
-    setCoverUrl(null)
-  }
-
-  function handleSubmit(formData: FormData) {
-    const input = {
-      title: formData.get("title") as string,
-      slug: (formData.get("slug") as string) || undefined,
-      excerpt: (formData.get("excerpt") as string) || undefined,
-      content: formData.get("content") as string,
-      cover_image_url: coverUrl || undefined,
-      type: formData.get("type") as "news" | "blog" | "tournament_writeup" | "announcement",
-      is_published: formData.get("is_published") === "on",
-    }
-
-    startTransition(async () => {
-      const result = editing
-        ? await adminUpdatePost(editing.id, input)
-        : await adminCreatePost(input)
-
-      if (result?.error) {
-        toast.error(result.error)
-      } else {
-        toast.success(editing ? "Post updated" : "Post created")
-        closeAll()
-      }
-    })
-  }
 
   function handleDelete(id: string) {
     if (!confirm("Delete this post?")) return
@@ -231,15 +167,16 @@ export function PostsAdminClient({ posts }: { posts: Post[] }) {
               </Link>
             )}
 
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => openEdit(post)}
-              className="rounded-xl border-[#0F1E3D]/12"
-            >
-              <Pencil className="mr-1.5 size-4" />
-              Edit
-            </Button>
+            <Link href={`${basePath}/${post.id}/edit`}>
+              <Button
+                size="sm"
+                variant="outline"
+                className="rounded-xl border-[#0F1E3D]/12"
+              >
+                <Pencil className="mr-1.5 size-4" />
+                Edit
+              </Button>
+            </Link>
 
             <Button
               size="sm"
@@ -317,231 +254,14 @@ export function PostsAdminClient({ posts }: { posts: Post[] }) {
             </p>
           </div>
 
-          <Button
-            onClick={openNew}
-            className="rounded-xl bg-[#0F1E3D] text-white hover:bg-[#1A2E5A]"
-          >
-            <Plus className="mr-2 size-4" />
-            New post
-          </Button>
+          <Link href={`${basePath}/new`}>
+            <Button className="rounded-xl bg-[#0F1E3D] text-white hover:bg-[#1A2E5A]">
+              <Plus className="mr-2 size-4" />
+              New post
+            </Button>
+          </Link>
         </div>
       </section>
-
-      <Dialog
-        open={open}
-        modal={false}
-        onOpenChange={(nextOpen) => {
-          if (!nextOpen) closeAll()
-        }}
-      >
-        <DialogContent
-          className="max-h-[90vh] max-w-3xl overflow-y-auto border-[#0F1E3D]/10 bg-[#FFFEFC] p-0 shadow-[0_24px_80px_rgba(15,30,61,0.16)]"
-          onInteractOutside={(e) => e.preventDefault()}
-          onPointerDownOutside={(e) => e.preventDefault()}
-          onEscapeKeyDown={(e) => e.preventDefault()}
-        >
-          <div className="border-b border-[#0F1E3D]/8 bg-[linear-gradient(180deg,rgba(8,23,49,0.98)_0%,rgba(13,34,68,0.98)_100%)] px-6 py-5 text-white">
-            <DialogHeader className="space-y-2 text-left">
-              <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/8 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#F7E9BF]">
-                {editing ? "Edit post" : "New post"}
-              </div>
-              <DialogTitle className="text-xl font-semibold text-white">
-                {editing ? "Update post details" : "Create post"}
-              </DialogTitle>
-              <DialogDescription className="max-w-xl text-sm leading-6 text-white/72">
-                Write and organize editorial content for the public website. Markdown is
-                supported in the content field.
-              </DialogDescription>
-            </DialogHeader>
-          </div>
-
-          <form
-            key={editing?.id ?? "new"}
-            action={handleSubmit}
-            className="space-y-5 p-6"
-          >
-            <div className="grid gap-5 sm:grid-cols-2">
-              <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="title" className="text-[#0F1E3D]">
-                  Title
-                </Label>
-                <Input
-                  id="title"
-                  name="title"
-                  required
-                  defaultValue={editing?.title ?? ""}
-                  className="h-11 rounded-xl border-[#0F1E3D]/12"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="slug" className="text-[#0F1E3D]">
-                  Slug
-                </Label>
-                <Input
-                  id="slug"
-                  name="slug"
-                  defaultValue={editing?.slug ?? ""}
-                  placeholder="auto-generated if left empty"
-                  className="h-11 rounded-xl border-[#0F1E3D]/12"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="type" className="text-[#0F1E3D]">
-                  Type
-                </Label>
-                <Select name="type" defaultValue={editing?.type ?? "blog"}>
-                  <SelectTrigger className="h-11 rounded-xl border-[#0F1E3D]/12 bg-white">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(TYPE_LABELS).map(([key, value]) => (
-                      <SelectItem key={key} value={key}>
-                        {value}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-3 sm:col-span-2">
-                <Label className="text-[#0F1E3D]">Cover image</Label>
-
-                <div className="rounded-[20px] border border-dashed border-[#0F1E3D]/14 bg-[#F8F8FA] p-4">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <div className="text-sm font-medium text-[#0F1E3D]">
-                        Upload post cover
-                      </div>
-                      <p className="mt-1 text-sm text-[#0F1E3D]/55">
-                        PNG, JPG, or WebP up to 5MB.
-                      </p>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      <CldUploadWidget
-                        uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-                        options={{
-                          maxFiles: 1,
-                          clientAllowedFormats: ["png", "jpg", "jpeg", "webp"],
-                          maxFileSize: 5000000,
-                        }}
-                        onSuccess={(result) => {
-                          const info = result.info
-                          if (
-                            info &&
-                            typeof info === "object" &&
-                            "secure_url" in info &&
-                            typeof info.secure_url === "string"
-                          ) {
-                            setCoverUrl(info.secure_url)
-                          }
-                        }}
-                      >
-                        {({ open: openWidget }) => (
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => openWidget?.()}
-                            className="rounded-xl border-[#0F1E3D]/12 bg-white"
-                          >
-                            <Upload className="mr-2 size-4" />
-                            {coverUrl ? "Replace image" : "Upload image"}
-                          </Button>
-                        )}
-                      </CldUploadWidget>
-
-                      {coverUrl && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => setCoverUrl(null)}
-                          className="rounded-xl border-[#0F1E3D]/12 bg-white"
-                        >
-                          Remove
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-
-                  {coverUrl && (
-                    <div className="mt-4 overflow-hidden rounded-[18px] border border-[#0F1E3D]/10 bg-white">
-                      <img
-                        src={coverUrl}
-                        alt="Post cover preview"
-                        className="h-44 w-full object-cover"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="excerpt" className="text-[#0F1E3D]">
-                  Excerpt
-                </Label>
-                <Textarea
-                  id="excerpt"
-                  name="excerpt"
-                  rows={3}
-                  defaultValue={editing?.excerpt ?? ""}
-                  placeholder="Short summary shown in listings"
-                  className="min-h-[96px] rounded-xl border-[#0F1E3D]/12"
-                />
-              </div>
-
-              <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="content" className="text-[#0F1E3D]">
-                  Content
-                </Label>
-                <Textarea
-                  id="content"
-                  name="content"
-                  rows={14}
-                  required
-                  defaultValue={editing?.content ?? ""}
-                  placeholder="# Heading&#10;&#10;Body text..."
-                  className="min-h-[260px] rounded-xl border-[#0F1E3D]/12 font-mono text-sm"
-                />
-              </div>
-
-              <div className="sm:col-span-2">
-                <label className="flex items-center gap-3 rounded-2xl border border-[#0F1E3D]/10 bg-[#F8F8FA] px-4 py-3">
-                  <input
-                    type="checkbox"
-                    id="is_published"
-                    name="is_published"
-                    defaultChecked={editing?.is_published ?? false}
-                    className="size-4"
-                  />
-                  <span className="text-sm text-[#0F1E3D]">
-                    Publish this post on the public site
-                  </span>
-                </label>
-              </div>
-            </div>
-
-            <DialogFooter className="gap-2 sm:justify-end">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={closeAll}
-                className="rounded-xl border-[#0F1E3D]/12"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={isPending}
-                className="rounded-xl bg-[#0F1E3D] text-white hover:bg-[#1A2E5A]"
-              >
-                {isPending ? "Saving..." : editing ? "Update post" : "Create post"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
 
       {posts.length === 0 ? (
         <div className="rounded-[24px] border border-dashed border-[#0F1E3D]/15 bg-white p-10 text-center">

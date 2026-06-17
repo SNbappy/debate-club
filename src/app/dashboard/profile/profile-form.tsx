@@ -14,6 +14,7 @@ import { CldUploadWidget } from "next-cloudinary"
 import { toast } from "sonner"
 import type { Profile } from "@/types/supabase"
 import { Upload, Trash2 } from "lucide-react"
+import { cloudinaryUploadWidgetStyles } from "@/lib/cloudinary"
 
 const CURRENT_YEAR = new Date().getFullYear()
 const START_YEAR = 2015
@@ -72,7 +73,13 @@ export function ProfileForm({ profile }: { profile: Profile }) {
           </Avatar>
           <CldUploadWidget
             uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-            options={{ maxFiles: 1, clientAllowedFormats: ["png", "jpg", "jpeg", "webp"], maxFileSize: 5000000 }}
+            options={{ 
+              maxFiles: 1, 
+              clientAllowedFormats: ["png", "jpg", "jpeg", "webp"], 
+              maxFileSize: 5000000,
+              singleUploadAutoClose: false,
+              styles: cloudinaryUploadWidgetStyles 
+            }}
             onSuccess={(result) => {
               const info = result.info
               if (info && typeof info === "object" && "secure_url" in info && typeof info.secure_url === "string") {

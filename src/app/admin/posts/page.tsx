@@ -1,4 +1,4 @@
-﻿import { createClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { PostsAdminClient } from "./posts-admin-client"
 
 export default async function AdminPostsPage() {
@@ -8,8 +8,7 @@ export default async function AdminPostsPage() {
   return (
     <div className="max-w-6xl">
       <h1 className="text-3xl font-bold mb-2">Posts</h1>
-      <p className="text-muted-foreground mb-6">Write news, blogs, tournament writeups, and announcements.</p>
-      <PostsAdminClient posts={posts ?? []} />
+      <PostsAdminClient posts={posts ?? []} basePath="/admin/posts" />
     </div>
   )
 }

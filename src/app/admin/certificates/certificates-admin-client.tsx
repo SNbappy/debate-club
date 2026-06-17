@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useMemo, useState, useTransition } from "react"
 import {
@@ -27,6 +27,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { CldUploadWidget } from "next-cloudinary"
+import { cloudinaryUploadWidgetStyles } from "@/lib/cloudinary"
 import { toast } from "sonner"
 import {
   Award,
@@ -332,6 +333,8 @@ export function CertificatesAdminClient({
                             maxFiles: 1,
                             clientAllowedFormats: ["pdf", "png", "jpg", "jpeg"],
                             maxFileSize: 10000000,
+                            singleUploadAutoClose: false,
+                            styles: cloudinaryUploadWidgetStyles,
                           }}
                           onSuccess={(result) => {
                             const info = result.info

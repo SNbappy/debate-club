@@ -68,17 +68,17 @@ function PostCard({
               : "rounded-[1.55rem] border-[#0F1E3D]/10 bg-white shadow-[0_14px_38px_rgba(15,30,61,0.06)] hover:-translate-y-1 hover:shadow-[0_22px_54px_rgba(15,30,61,0.10)]",
           ].join(" ")}
         >
-          <div className={featured ? "grid h-full lg:grid-cols-[1.05fr_0.95fr]" : ""}>
+          <div className={featured ? "grid h-full lg:grid-cols-[1.05fr_0.95fr] lg:min-h-[380px] xl:min-h-[420px]" : ""}>
             <div className="relative overflow-hidden bg-[#0F1E3D]">
-              <div className={featured ? "aspect-[4/3.4] h-full lg:aspect-auto" : "aspect-[4/2.6]"}>
+              <div className={featured ? "aspect-[16/9] w-full lg:h-full lg:min-h-[380px]" : "aspect-[4/2.6]"}>
                 {image ? (
                   <img
                     src={image}
                     alt={title}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_24%_20%,rgba(193,154,61,0.22),transparent_18%),linear-gradient(180deg,#132750_0%,#0F1E3D_100%)]">
+                  <div className="absolute inset-0 flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_24%_20%,rgba(193,154,61,0.22),transparent_18%),linear-gradient(180deg,#132750_0%,#0F1E3D_100%)]">
                     <div className="rounded-full border border-[#C19A3D]/35 bg-white/8 px-5 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#F5E7BF] backdrop-blur-sm">
                       JUSTDC Post
                     </div>
@@ -96,7 +96,7 @@ function PostCard({
               </div>
             </div>
 
-            <div className={featured ? "flex flex-col justify-between p-6 md:p-8" : "p-5"}>
+            <div className={featured ? "flex flex-col justify-center p-6 md:p-8 lg:p-10" : "p-5"}>
               <div>
                 <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
                   {featured ? "Featured post" : typeLabel}
@@ -104,7 +104,7 @@ function PostCard({
                 <h3 className={[
                   "tracking-tight",
                   featured
-                    ? "font-display text-[2.2rem] leading-[0.94] text-white md:text-[2.7rem]"
+                    ? "font-display text-[2rem] leading-[0.94] text-white md:text-[2.3rem]"
                     : "font-display text-[1.75rem] leading-[0.95] text-[#0F1E3D]",
                 ].join(" ")}>
                   {title}

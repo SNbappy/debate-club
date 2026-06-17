@@ -45,7 +45,7 @@ export default async function MemberPostsPage() {
         </p>
       </div>
 
-      <PostsAdminClient posts={posts ?? []} />
+      <PostsAdminClient posts={posts ?? []} basePath="/dashboard/posts" />
     </div>
   )
 }

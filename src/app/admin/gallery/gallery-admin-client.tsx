@@ -19,6 +19,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { CldUploadWidget } from "next-cloudinary"
+import { cloudinaryUploadWidgetStyles } from "@/lib/cloudinary"
 import { toast } from "sonner"
 import Link from "next/link"
 import {
@@ -474,14 +475,14 @@ export function GalleryAdminClient({ albums }: { albums: Album[] }) {
                         </div>
                       )}
                     </div>
-
                     <div className="flex flex-wrap gap-2 border-t border-[#0F1E3D]/10 p-3">
                       <CldUploadWidget
                         uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
                         options={{
-                          maxFiles: 1,
+                          maxFiles: 10,
                           clientAllowedFormats: ["png", "jpg", "jpeg", "webp"],
-                          maxFileSize: 5000000,
+                          maxFileSize: 10000000,
+                          styles: cloudinaryUploadWidgetStyles,
                         }}
                         onSuccess={(result) => {
                           const info = result.info
