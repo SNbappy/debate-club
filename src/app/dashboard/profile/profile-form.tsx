@@ -117,7 +117,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-4 text-sm mt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-4 text-sm mt-2">
             {checklist.map((item) => (
               <div key={item.label} className="flex items-center gap-2">
                 {item.complete ? (
@@ -136,7 +136,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
 
       <Card>
         <CardHeader><CardTitle>Avatar</CardTitle></CardHeader>
-        <CardContent className="flex items-center gap-4">
+        <CardContent className="flex flex-wrap items-center gap-4">
           <Avatar className="size-20">
             <AvatarImage src={avatarUrl ?? undefined} alt={profile.full_name} />
             <AvatarFallback className="text-xl">{initials}</AvatarFallback>
@@ -253,7 +253,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
             <div className="space-y-2">
               <Label htmlFor="email_visibility">Email visibility</Label>
               <Select name="email_visibility" defaultValue={profile.email_visibility}>
-                <SelectTrigger className="sm:w-[280px]"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="w-full sm:w-[280px]"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="public">Public</SelectItem>
                   <SelectItem value="members_only">Members only</SelectItem>
