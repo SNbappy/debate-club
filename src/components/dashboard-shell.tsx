@@ -6,7 +6,6 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   ArrowRight,
-  Award,
   FileBadge2,
   FileText,
   LayoutDashboard,
@@ -53,7 +52,6 @@ export function DashboardShell({
       { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
       { href: "/dashboard/profile", label: "Profile", icon: UserCircle2 },
       { href: "/dashboard/posts", label: "My Posts", icon: FileText },
-      { href: "/dashboard/achievements", label: "Achievements", icon: Award },
       { href: "/dashboard/certificates", label: "Certificates", icon: FileBadge2 },
     ]
     if (profile?.is_admin) {

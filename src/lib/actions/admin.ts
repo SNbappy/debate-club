@@ -1,4 +1,4 @@
-﻿"use server"
+"use server"
 
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
@@ -49,20 +49,4 @@ export async function adminSetMemberAdmin(profileId: string, isAdmin: boolean) {
   return {}
 }
 
-export async function adminVerifyAchievement(id: string, verified: boolean) {
-  const ctx = await requireAdmin()
-  if ("error" in ctx) return { error: ctx.error }
-  const { error } = await ctx.supabase.from("achievements").update({ is_verified: verified }).eq("id", id)
-  if (error) return { error: error.message }
-  revalidatePath("/admin/achievements"); revalidatePath("/admin")
-  return {}
-}
 
-export async function adminDeleteAchievement(id: string) {
-  const ctx = await requireAdmin()
-  if ("error" in ctx) return { error: ctx.error }
-  const { error } = await ctx.supabase.from("achievements").delete().eq("id", id)
-  if (error) return { error: error.message }
-  revalidatePath("/admin/achievements"); revalidatePath("/admin")
-  return {}
-}

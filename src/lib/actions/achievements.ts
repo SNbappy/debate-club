@@ -15,6 +15,15 @@ const achievementSchema = z.object({
   achievement_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date").optional(),
 })
 
+async function requireAdmin() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: "Not authenticated" as const }
+  const { data: profile } = await supabase.from("profiles").select("is_admin").eq("id", user.id).single()
+  if (!profile?.is_admin) return { error: "Not authorized" as const }
+  return { supabase, userId: user.id }
+}
+
 function normalize(formData: FormData): Record<string, unknown> {
   const raw: Record<string, unknown> = {}
   for (const [k, v] of formData.entries()) {
@@ -40,54 +49,50 @@ function toDb(parsed: Record<string, unknown>): Record<string, unknown> {
 }
 
 export async function createAchievement(formData: FormData): Promise<{ error?: string }> {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: "Not authenticated" }
+  const ctx = await requireAdmin()
+  if ("error" in ctx) return { error: ctx.error }
 
   const parsed = achievementSchema.safeParse(normalize(formData))
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid input" }
 
-  const { error } = await supabase.from("achievements").insert({
+  const { error } = await ctx.supabase.from("achievements").insert({
     ...(toDb(parsed.data) as InsertTables<"achievements">),
-    profile_id: user.id,
+    profile_id: ctx.userId, // use admin as the placeholder profile
+    is_verified: true, // admin created achievements are automatically verified
   })
   if (error) return { error: error.message }
-  revalidatePath("/dashboard/achievements")
-  revalidatePath("/dashboard")
+  revalidatePath("/admin/achievements")
+  revalidatePath("/achievements")
   return {}
 }
 
 export async function updateAchievement(id: string, formData: FormData): Promise<{ error?: string }> {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: "Not authenticated" }
+  const ctx = await requireAdmin()
+  if ("error" in ctx) return { error: ctx.error }
 
   const parsed = achievementSchema.safeParse(normalize(formData))
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid input" }
 
-  const { error } = await supabase
+  const { error } = await ctx.supabase
     .from("achievements")
     .update(toDb(parsed.data) as UpdateTables<"achievements">)
     .eq("id", id)
-    .eq("profile_id", user.id)
-    .eq("is_verified", false)
   if (error) return { error: error.message }
-  revalidatePath("/dashboard/achievements")
+  revalidatePath("/admin/achievements")
+  revalidatePath("/achievements")
   return {}
 }
 
 export async function deleteAchievement(id: string): Promise<{ error?: string }> {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: "Not authenticated" }
+  const ctx = await requireAdmin()
+  if ("error" in ctx) return { error: ctx.error }
 
-  const { error } = await supabase
+  const { error } = await ctx.supabase
     .from("achievements")
     .delete()
     .eq("id", id)
-    .eq("profile_id", user.id)
   if (error) return { error: error.message }
-  revalidatePath("/dashboard/achievements")
-  revalidatePath("/dashboard")
+  revalidatePath("/admin/achievements")
+  revalidatePath("/achievements")
   return {}
 }

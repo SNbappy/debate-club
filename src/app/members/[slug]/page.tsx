@@ -83,21 +83,7 @@ const ROLE_LABELS: Record<string, string> = {
   alumni: "Alumni",
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  speaker_award: "Speaker Awards",
-  adjudication_award: "Adjudication Awards",
-  team_result: "Team Results",
-  training_conducted: "Training Conducted",
-  other: "Other",
-}
 
-const CATEGORY_ORDER = [
-  "speaker_award",
-  "adjudication_award",
-  "team_result",
-  "training_conducted",
-  "other",
-] as const
 
 function normalizeText(value: string | null | undefined) {
   return value?.trim() || ""
@@ -139,26 +125,11 @@ export default async function MemberProfilePage({
 
   if (!profile) notFound()
 
-  const [{ data: achievements }, { data: certificates }] = await Promise.all([
-    supabase
-      .from("achievements")
-      .select("*")
-      .eq("profile_id", profile.id)
-      .eq("is_verified", true)
-      .order("achievement_date", { ascending: false, nullsFirst: false })
-      .order("created_at", { ascending: false }),
-    supabase
-      .from("certificates")
-      .select("*")
-      .eq("profile_id", profile.id)
-      .order("issued_date", { ascending: false }),
-  ])
-
-  const grouped: Record<string, typeof achievements> = {}
-  for (const achievement of achievements ?? []) {
-    if (!grouped[achievement.category]) grouped[achievement.category] = []
-    grouped[achievement.category]!.push(achievement)
-  }
+  const { data: certificates } = await supabase
+    .from("certificates")
+    .select("*")
+    .eq("profile_id", profile.id)
+    .order("issued_date", { ascending: false })
 
   const name = formatLabel(profile.full_name, "Unnamed Member")
   const initials = getInitials(profile.full_name)
@@ -360,89 +331,7 @@ export default async function MemberProfilePage({
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-[#FDF8EE] py-16 sm:py-20 md:py-24">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(193,154,61,0.10),transparent_24%),radial-gradient(circle_at_86%_20%,rgba(15,30,61,0.06),transparent_20%)]" />
-        <div className="relative mx-auto max-w-6xl px-6">
-          <Reveal>
-            <div className="mb-10 max-w-2xl">
-              <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#C19A3D]">
-                Achievements
-              </div>
-              <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-[#0F1E3D] leading-tight">
-                Verified milestones and competitive highlights.
-              </h2>
-            </div>
-          </Reveal>
 
-          {!achievements || achievements.length === 0 ? (
-            <Reveal delay={0.08}>
-              <div className="rounded-[1.6rem] border border-[#0F1E3D]/10 bg-white p-8 text-center shadow-[0_18px_44px_rgba(15,30,61,0.06)]">
-                <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
-                  Records
-                </div>
-                <h3 className="mt-3 font-display text-xl sm:text-2xl font-bold tracking-tight text-[#0F1E3D]">
-                  No verified achievements yet
-                </h3>
-                <p className="mt-4 text-sm leading-7 text-[#0F1E3D]/66">
-                  Public achievement records will appear here as the member profile grows.
-                </p>
-              </div>
-            </Reveal>
-          ) : (
-            <div className="space-y-10">
-              {CATEGORY_ORDER.filter((category) => grouped[category]?.length).map((category, categoryIndex) => (
-                <Reveal key={category} delay={0.06 + categoryIndex * 0.05}>
-                  <section>
-                    <div className="mb-5 flex items-end justify-between gap-4 border-b border-[#0F1E3D]/10 pb-4">
-                      <div>
-                        <h3 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-[#0F1E3D] leading-none">
-                          {CATEGORY_LABELS[category]}
-                        </h3>
-                      </div>
-                      <div className="text-sm text-[#0F1E3D]/52">
-                        {grouped[category]!.length} item{grouped[category]!.length > 1 ? "s" : ""}
-                      </div>
-                    </div>
-
-                    <div className="grid gap-4">
-                      {grouped[category]!.map((achievement, itemIndex) => (
-                        <Reveal key={achievement.id} delay={0.08 + itemIndex * 0.03}>
-                          <article className="group overflow-hidden rounded-[1.55rem] border border-[#0F1E3D]/10 bg-white shadow-[0_12px_34px_rgba(15,30,61,0.05)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_46px_rgba(15,30,61,0.08)]">
-                            <div className="grid p-5 sm:p-6 md:grid-cols-[0.92fr_1.08fr] md:gap-8">
-                              <div>
-                                <h4 className="font-display text-lg sm:text-xl font-bold tracking-tight text-[#0F1E3D] leading-snug">
-                                  {achievement.title}
-                                </h4>
-                              </div>
-
-                              <div>
-                                <div className="flex flex-wrap gap-x-3 gap-y-2 text-sm text-[#0F1E3D]/62">
-                                  {achievement.tournament_name ? <span>{achievement.tournament_name}</span> : null}
-                                  {achievement.tournament_year ? <span>• {achievement.tournament_year}</span> : null}
-                                  {achievement.position ? <span>• {achievement.position}</span> : null}
-                                  {achievement.achievement_date ? (
-                                    <span>• {formatDate(achievement.achievement_date)}</span>
-                                  ) : null}
-                                </div>
-
-                                {normalizeText(achievement.description) ? (
-                                  <p className="mt-4 text-[15px] leading-7 text-[#0F1E3D]/70">
-                                    {achievement.description}
-                                  </p>
-                                ) : null}
-                              </div>
-                            </div>
-                          </article>
-                        </Reveal>
-                      ))}
-                    </div>
-                  </section>
-                </Reveal>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
 
       {certificates && certificates.length > 0 ? (
         <section className="relative overflow-hidden bg-white py-16 sm:py-20 md:py-24">

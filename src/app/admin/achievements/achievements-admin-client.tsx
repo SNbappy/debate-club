@@ -1,27 +1,20 @@
-﻿"use client"
+"use client"
 
-import { useMemo, useTransition } from "react"
-import {
-  adminDeleteAchievement,
-  adminVerifyAchievement,
-} from "@/lib/actions/admin"
+import { useTransition } from "react"
+import { deleteAchievement } from "@/lib/actions/achievements"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
-import { Check, Clock3, Trash2, Trophy, UserRound, X } from "lucide-react"
-
-type AchievementRow = {
-  id: string
-  title: string
-  category: string
-  tournament_name: string | null
-  tournament_year: number | null
-  position: string | null
-  achievement_date: string | null
-  description: string | null
-  is_verified: boolean
-  profiles: { full_name: string; slug: string | null; email: string } | null
-}
+import Link from "next/link"
+import {
+  Trophy,
+  Pencil,
+  Plus,
+  Trash2,
+  Calendar,
+  Medal,
+} from "lucide-react"
+import type { Achievement } from "@/types/supabase"
 
 const CATEGORY_LABELS: Record<string, string> = {
   speaker_award: "Speaker Award",
@@ -31,141 +24,95 @@ const CATEGORY_LABELS: Record<string, string> = {
   other: "Other",
 }
 
+function formatDate(value: string | null) {
+  if (!value) return null
+
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return value
+
+  return new Intl.DateTimeFormat("en-BD", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(date)
+}
+
 export function AchievementsAdminClient({
   achievements,
+  basePath,
 }: {
-  achievements: AchievementRow[]
+  achievements: Achievement[]
+  basePath: string
 }) {
   const [isPending, startTransition] = useTransition()
 
-  const pendingAchievements = useMemo(
-    () => achievements.filter((a) => !a.is_verified),
-    [achievements]
-  )
+  function handleDelete(id: string) {
+    if (!confirm("Delete this achievement?")) return
 
-  const verifiedAchievements = useMemo(
-    () => achievements.filter((a) => a.is_verified),
-    [achievements]
-  )
-
-  function act(fn: () => Promise<{ error?: string }>, msg: string) {
     startTransition(async () => {
-      const result = await fn()
+      const result = await deleteAchievement(id)
       if (result?.error) toast.error(result.error)
-      else toast.success(msg)
+      else toast.success("Achievement deleted")
     })
   }
 
-  function AchievementCard({
-    achievement,
-    urgent = false,
-  }: {
-    achievement: AchievementRow
-    urgent?: boolean
-  }) {
+  function AchievementCard({ achievement }: { achievement: Achievement }) {
+    const typeLabel = CATEGORY_LABELS[achievement.category] ?? achievement.category
+
     return (
-      <div
-        className={`rounded-[22px] border p-5 transition-shadow hover:shadow-[0_14px_35px_rgba(15,30,61,0.08)] ${
-          urgent
-            ? "border-amber-200 bg-amber-50/60"
-            : "border-[#0F1E3D]/8 bg-white"
-        }`}
-      >
+      <div className="rounded-[22px] border border-[#0F1E3D]/8 bg-white p-5 transition-shadow hover:shadow-[0_14px_35px_rgba(15,30,61,0.08)]">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="text-[1rem] font-semibold text-[#0F1E3D]">
                 {achievement.title}
               </h3>
-
-              {achievement.is_verified ? (
-                <Badge className="rounded-full bg-emerald-100 text-emerald-700 hover:bg-emerald-100">
-                  Verified
-                </Badge>
-              ) : (
-                <Badge
-                  variant="outline"
-                  className="rounded-full border-amber-300 bg-amber-50 text-amber-700"
-                >
-                  Pending
-                </Badge>
-              )}
-
-              <Badge
-                variant="outline"
-                className="rounded-full border-[#0F1E3D]/12 bg-[#F8F8FA] text-[#0F1E3D]"
-              >
-                {CATEGORY_LABELS[achievement.category] ?? achievement.category}
+              <Badge variant="outline" className="rounded-full border-[#0F1E3D]/12 bg-[#F8F8FA] text-[#0F1E3D]">
+                {typeLabel}
               </Badge>
             </div>
 
-            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[#0F1E3D]/58">
-              <span className="inline-flex items-center gap-1.5">
-                <UserRound className="size-3.5" />
-                {achievement.profiles?.full_name ?? "Unknown member"}
-              </span>
-              {achievement.profiles?.email && <span>· {achievement.profiles.email}</span>}
-            </div>
-
-            <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-[#0F1E3D]/62">
+            <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[#0F1E3D]/60">
               {achievement.tournament_name && <span>{achievement.tournament_name}</span>}
-              {achievement.tournament_year && <span>· {achievement.tournament_year}</span>}
-              {achievement.position && <span>· {achievement.position}</span>}
-              {achievement.achievement_date && <span>· {achievement.achievement_date}</span>}
+              {achievement.tournament_year && (
+                <span className="flex items-center gap-1">
+                  <Calendar className="size-3.5" />
+                  {achievement.tournament_year}
+                </span>
+              )}
+              {achievement.position && (
+                <span className="flex items-center gap-1 uppercase tracking-wider text-[#C19A3D] font-bold text-xs">
+                  <Medal className="size-3.5" />
+                  {achievement.position}
+                </span>
+              )}
+              {achievement.achievement_date && <span>· {formatDate(achievement.achievement_date)}</span>}
             </div>
 
             {achievement.description && (
-              <p className="mt-3 text-sm leading-6 text-[#0F1E3D]/65">
+              <p className="mt-3 line-clamp-3 text-sm leading-6 text-[#0F1E3D]/65">
                 {achievement.description}
               </p>
             )}
           </div>
 
           <div className="flex flex-wrap gap-2 xl:justify-end">
-            {achievement.is_verified ? (
-              <Button
-                size="sm"
-                variant="outline"
-                disabled={isPending}
-                onClick={() =>
-                  act(
-                    () => adminVerifyAchievement(achievement.id, false),
-                    "Achievement unverified"
-                  )
-                }
-                className="rounded-xl border-[#0F1E3D]/12"
-              >
-                <X className="mr-1.5 size-4" />
-                Unverify
+            <Link href={`${basePath}/${achievement.id}/edit`}>
+              <Button size="sm" variant="outline" className="rounded-xl border-[#0F1E3D]/12">
+                <Pencil className="mr-1.5 size-4" />
+                Edit
               </Button>
-            ) : (
-              <Button
-                size="sm"
-                disabled={isPending}
-                onClick={() =>
-                  act(
-                    () => adminVerifyAchievement(achievement.id, true),
-                    "Achievement verified"
-                  )
-                }
-                className="rounded-xl bg-[#0F1E3D] text-white hover:bg-[#1a2e5a]"
-              >
-                <Check className="mr-1.5 size-4" />
-                Verify
-              </Button>
-            )}
+            </Link>
 
             <Button
               size="sm"
               variant="outline"
               disabled={isPending}
-              onClick={() => {
-                if (!confirm("Delete this achievement?")) return
-                act(() => adminDeleteAchievement(achievement.id), "Achievement deleted")
-              }}
+              onClick={() => handleDelete(achievement.id)}
               className="rounded-xl border-[#0F1E3D]/12"
             >
-              <Trash2 className="size-4" />
+              <Trash2 className="mr-1.5 size-4" />
+              Delete
             </Button>
           </div>
         </div>
@@ -173,47 +120,77 @@ export function AchievementsAdminClient({
     )
   }
 
-  if (achievements.length === 0) {
-    return (
-      <div className="rounded-[22px] border border-dashed border-[#0F1E3D]/15 bg-white p-10 text-center">
-        <Trophy className="mx-auto mb-4 size-10 text-[#0F1E3D]/20" />
-        <p className="text-sm font-medium text-[#0F1E3D]/50">
-          No achievements have been submitted yet.
-        </p>
-      </div>
-    )
-  }
-
   return (
-    <div className="space-y-8">
-      {pendingAchievements.length > 0 && (
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Clock3 className="size-4 text-[#C19A3D]" />
-            <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#0F1E3D]/55">
-              Pending review
-            </h3>
+    <div className="space-y-6">
+      <section className="rounded-[28px] border border-[#0F1E3D]/8 bg-white p-5 shadow-[0_20px_60px_rgba(15,30,61,0.06)] sm:p-6">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div className="space-y-3">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#C19A3D]/20 bg-[#FBF6E8] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#A17C27]">
+              Records Management
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-semibold tracking-tight text-[#0F1E3D]">
+                Achievements
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-[#0F1E3D]/62">
+                Manage club achievements, tournament results, and speaker awards to display on the public page.
+              </p>
+            </div>
           </div>
 
-          <div className="space-y-3">
-            {pendingAchievements.map((achievement) => (
-              <AchievementCard key={achievement.id} achievement={achievement} urgent />
-            ))}
+          <div className="grid gap-3 sm:grid-cols-2 lg:min-w-[320px]">
+            <div className="rounded-[22px] border border-[#0F1E3D]/8 bg-[#F8F8FA] px-4 py-4">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#0F1E3D]/45">
+                Total achievements
+              </div>
+              <div className="mt-2 text-2xl font-semibold text-[#0F1E3D]">
+                {achievements.length}
+              </div>
+            </div>
           </div>
         </div>
-      )}
 
-      {verifiedAchievements.length > 0 && (
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-[22px] border border-[#0F1E3D]/8 bg-[#FCFCFD] px-4 py-4">
+          <div>
+            <div className="text-sm font-medium text-[#0F1E3D]">
+              Create new achievement
+            </div>
+            <p className="mt-1 text-sm text-[#0F1E3D]/58">
+              Add a new award or result to the club's history.
+            </p>
+          </div>
+
+          <Link href={`${basePath}/new`}>
+            <Button className="rounded-xl bg-[#0F1E3D] text-white hover:bg-[#1A2E5A]">
+              <Plus className="mr-2 size-4" />
+              New achievement
+            </Button>
+          </Link>
+        </div>
+      </section>
+
+      {achievements.length === 0 ? (
+        <div className="rounded-[24px] border border-dashed border-[#0F1E3D]/15 bg-white p-10 text-center">
+          <Trophy className="mx-auto mb-4 size-10 text-[#0F1E3D]/20" />
+          <p className="text-sm font-medium text-[#0F1E3D]/55">
+            No achievements have been added yet.
+          </p>
+          <p className="mt-2 text-sm text-[#0F1E3D]/45">
+            Create the first achievement to start showcasing the club's success.
+          </p>
+        </div>
+      ) : (
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <Check className="size-4 text-[#C19A3D]" />
+            <Trophy className="size-4 text-[#C19A3D]" />
             <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#0F1E3D]/55">
-              Verified records
+              All Achievements
             </h3>
           </div>
 
           <div className="space-y-3">
-            {verifiedAchievements.map((achievement) => (
+            {achievements.map((achievement) => (
               <AchievementCard key={achievement.id} achievement={achievement} />
             ))}
           </div>

@@ -31,7 +31,6 @@ type Achievement = {
   position: string | null
   achievement_date: string | null
   description: string | null
-  profiles: { full_name: string | null; slug: string | null } | null
 }
 
 export default async function AchievementsPage({
@@ -45,7 +44,7 @@ export default async function AchievementsPage({
   const supabase = await createClient()
   let query = supabase
     .from("achievements")
-    .select("id, title, category, tournament_name, tournament_year, position, achievement_date, description, profiles:profile_id(full_name, slug)")
+    .select("id, title, category, tournament_name, tournament_year, position, achievement_date, description")
     .eq("is_verified", true)
 
   if (category) {
@@ -230,23 +229,6 @@ export default async function AchievementsPage({
                         )}
                       </div>
 
-                      {ach.profiles && (
-                        <div className="mt-6 border-t border-[#0F1E3D]/6 pt-4 flex items-center justify-between text-xs">
-                          <span className="text-[#0F1E3D]/45 font-medium">Earned by</span>
-                          {ach.profiles.slug ? (
-                            <Link
-                              href={`/members/${ach.profiles.slug}`}
-                              className="font-bold text-[#0F1E3D] hover:text-[#C19A3D] transition-colors"
-                            >
-                              {ach.profiles.full_name}
-                            </Link>
-                          ) : (
-                            <span className="font-bold text-[#0F1E3D]">
-                              {ach.profiles.full_name}
-                            </span>
-                          )}
-                        </div>
-                      )}
                     </article>
                   </Reveal>
                 )
