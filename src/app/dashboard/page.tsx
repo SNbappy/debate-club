@@ -37,11 +37,20 @@ export default async function DashboardPage() {
         .eq("profile_id", user.id),
     ])
 
+  const hasValue = (v: any) => {
+    if (typeof v === "string") return v.trim().length > 0
+    if (typeof v === "number") return true
+    return Boolean(v)
+  }
+
   const completionItems = [
-    Boolean(profile?.full_name),
-    Boolean(profile?.slug),
-    Boolean(profile?.bio),
-    Boolean(profile?.avatar_url),
+    hasValue(profile?.full_name),
+    hasValue(profile?.slug),
+    hasValue(profile?.bio),
+    hasValue(profile?.avatar_url),
+    hasValue(profile?.department),
+    hasValue(profile?.batch_year),
+    hasValue(profile?.phone),
   ]
 
   const completionCount = completionItems.filter(Boolean).length
@@ -81,7 +90,7 @@ export default async function DashboardPage() {
 
         {/* Profile Completion Card */}
         <div className="rounded-2xl border border-[#0F1E3D]/8 bg-white p-5 shadow-sm transition-all hover:shadow-md">
-          <p className="text-[11px] font-bold uppercase tracking-wider text-[#0F1E3D]/40">Completion</p>
+          <p className="text-[11px] font-bold uppercase tracking-wider text-[#0F1E3D]/40">Profile Complete</p>
           <div className="mt-3 flex items-center justify-between">
             <span className="text-2xl font-bold text-[#0F1E3D]">{completionPercent}%</span>
             <UserCircle2 className="size-5 text-[#C19A3D]" />

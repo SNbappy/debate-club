@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState, useTransition, useEffect } from "react"
 import { updateProfile } from "@/lib/actions/profile"
 import { updateAvatar } from "@/lib/actions/avatar"
 import { Button } from "@/components/ui/button"
@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { CldUploadWidget } from "next-cloudinary"
 import { toast } from "sonner"
 import type { Profile } from "@/types/supabase"
-import { Upload, Trash2 } from "lucide-react"
+import { Upload, Trash2, CheckCircle2, XCircle } from "lucide-react"
 import { cloudinaryUploadWidgetStyles } from "@/lib/cloudinary"
 
 const CURRENT_YEAR = new Date().getFullYear()
@@ -43,6 +43,32 @@ export function ProfileForm({ profile }: { profile: Profile }) {
   const [isPending, startTransition] = useTransition()
   const [avatarUrl, setAvatarUrl] = useState<string | null>(profile.avatar_url)
 
+  const [liveState, setLiveState] = useState({
+    full_name: profile.full_name || "",
+    slug: profile.slug || "",
+    bio: profile.bio || "",
+    department: profile.department || "",
+    batch_year: profile.batch_year ? String(profile.batch_year) : "",
+    phone: profile.phone || "",
+    avatar_url: profile.avatar_url || "",
+  })
+
+  useEffect(() => {
+    setLiveState((prev) => ({ ...prev, avatar_url: avatarUrl || "" }))
+  }, [avatarUrl])
+
+  function handleFormChange(e: React.FormEvent<HTMLFormElement>) {
+    const fd = new FormData(e.currentTarget)
+    setLiveState((prev) => ({
+      ...prev,
+      full_name: fd.get("full_name")?.toString() || "",
+      slug: fd.get("slug")?.toString() || "",
+      bio: fd.get("bio")?.toString() || "",
+      department: fd.get("department")?.toString() || "",
+      phone: fd.get("phone")?.toString() || "",
+    }))
+  }
+
   function handleSubmit(formData: FormData) {
     startTransition(async () => {
       const result = await updateProfile(formData)
@@ -60,10 +86,54 @@ export function ProfileForm({ profile }: { profile: Profile }) {
     })
   }
 
+  const checklist = [
+    { label: "Profile Picture", complete: liveState.avatar_url.trim().length > 0 },
+    { label: "Full Name", complete: liveState.full_name.trim().length > 0 },
+    { label: "Profile URL Slug", complete: liveState.slug.trim().length > 0 },
+    { label: "Bio", complete: liveState.bio.trim().length > 0 },
+    { label: "Session", complete: liveState.batch_year.trim().length > 0 },
+    { label: "Department", complete: liveState.department.trim().length > 0 },
+    { label: "Phone", complete: liveState.phone.trim().length > 0 },
+  ]
+  const completedCount = checklist.filter((c) => c.complete).length
+  const percent = Math.round((completedCount / checklist.length) * 100)
+
   const initials = profile.full_name?.split(" ").slice(0, 2).map((s) => s[0]).join("").toUpperCase() || "?"
 
   return (
     <div className="space-y-6">
+      {/* Live Profile Completion Card */}
+      <Card className="border-[#0F1E3D]/10 bg-gradient-to-br from-white to-[#EEF2F6]/50">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-bold text-[#0F1E3D] flex items-center justify-between">
+            <span>Profile Completion</span>
+            <span className="text-[#C19A3D]">{percent}%</span>
+          </CardTitle>
+          <div className="h-2 w-full rounded-full bg-[#0F1E3D]/5 overflow-hidden mt-2">
+            <div 
+              className="h-full bg-[#C19A3D] transition-all duration-500 ease-out" 
+              style={{ width: `${percent}%` }}
+            />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-4 text-sm mt-2">
+            {checklist.map((item) => (
+              <div key={item.label} className="flex items-center gap-2">
+                {item.complete ? (
+                  <CheckCircle2 className="size-4 text-emerald-500 shrink-0" />
+                ) : (
+                  <XCircle className="size-4 text-rose-400 shrink-0" />
+                )}
+                <span className={item.complete ? "text-[#0F1E3D]/80" : "text-[#0F1E3D]/50"}>
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader><CardTitle>Avatar</CardTitle></CardHeader>
         <CardContent className="flex items-center gap-4">
@@ -101,7 +171,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
         </CardContent>
       </Card>
 
-      <form action={handleSubmit} className="space-y-6">
+      <form action={handleSubmit} onChange={handleFormChange} className="space-y-6">
         <Card>
           <CardHeader><CardTitle>Basic info</CardTitle></CardHeader>
           <CardContent className="space-y-4">
@@ -123,7 +193,11 @@ export function ProfileForm({ profile }: { profile: Profile }) {
             <div className="grid sm:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="batch_year">Session</Label>
-                <Select name="batch_year" defaultValue={profile.batch_year ? String(profile.batch_year) : undefined}>
+                <Select 
+                  name="batch_year" 
+                  defaultValue={profile.batch_year ? String(profile.batch_year) : undefined}
+                  onValueChange={(val) => setLiveState(prev => ({ ...prev, batch_year: val }))}
+                >
                   <SelectTrigger id="batch_year">
                     <SelectValue placeholder="Select session" />
                   </SelectTrigger>
