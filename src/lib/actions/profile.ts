@@ -9,7 +9,7 @@ const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 const profileSchema = z.object({
   full_name: z.string().min(2, "Name too short").max(100),
-  slug: z.string().regex(slugRegex, "Slug: lowercase letters, numbers, hyphens only").min(3).max(50).optional(),
+  slug: z.string().regex(slugRegex, "Slug: lowercase letters, numbers, hyphens only").min(3).max(50),
   bio: z.string().max(500).optional(),
   batch_year: z.number().int().min(1900).max(2100).optional(),
   department: z.string().max(100).optional(),
@@ -62,14 +62,7 @@ export async function updateProfile(formData: FormData): Promise<{ error?: strin
     data[k] = v === undefined ? null : v
   }
 
-  if (!data.slug && typeof data.full_name === "string") {
-    data.slug = data.full_name
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .trim()
-      .replace(/\s+/g, "-")
-      .slice(0, 50)
-  }
+
 
   const { error } = await supabase.from("profiles").update(data as UpdateTables<"profiles">).eq("id", user.id)
   if (error) {

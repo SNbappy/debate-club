@@ -19,6 +19,17 @@ import { cloudinaryUploadWidgetStyles } from "@/lib/cloudinary"
 const CURRENT_YEAR = new Date().getFullYear()
 const START_YEAR = 2015
 
+function slugify(text: string) {
+  return text
+    .toString()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-]+/g, '')
+    .replace(/\-\-+/g, '-')
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
+}
+
 function generateSessionOptions() {
   const options: { value: string; label: string }[] = []
   for (let year = CURRENT_YEAR + 1; year >= START_YEAR; year--) {
@@ -43,9 +54,11 @@ export function ProfileForm({ profile }: { profile: Profile }) {
   const [isPending, startTransition] = useTransition()
   const [avatarUrl, setAvatarUrl] = useState<string | null>(profile.avatar_url)
 
+  const defaultSlug = profile.slug || slugify(profile.full_name || "")
+
   const [liveState, setLiveState] = useState({
     full_name: profile.full_name || "",
-    slug: profile.slug || "",
+    slug: defaultSlug,
     bio: profile.bio || "",
     department: profile.department || "",
     batch_year: profile.batch_year ? String(profile.batch_year) : "",
@@ -182,7 +195,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="slug">Profile URL slug</Label>
-                <Input id="slug" name="slug" defaultValue={profile.slug ?? ""} placeholder="e.g. sabbir-bappy" />
+                <Input id="slug" name="slug" defaultValue={defaultSlug} required placeholder="e.g. sabbir-bappy" />
                 <p className="text-xs text-muted-foreground">Lowercase, hyphens. Used in /members/[slug].</p>
               </div>
             </div>
