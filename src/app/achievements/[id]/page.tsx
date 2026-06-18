@@ -70,7 +70,7 @@ export default async function AchievementDetailPage({
             </Link>
           </Reveal>
 
-          <div className="mt-8 grid gap-8 lg:grid-cols-[0.88fr_1.12fr] lg:items-end lg:gap-14">
+          <div className="mt-8 flex flex-col-reverse gap-8 lg:grid lg:grid-cols-[0.88fr_1.12fr] lg:items-end lg:gap-14">
             <Reveal delay={0.08}>
               <div className="relative max-w-[30rem]">
                 <div className="relative overflow-hidden rounded-[1.9rem] border border-white/10 bg-[#132750] shadow-[0_32px_80px_rgba(0,0,0,0.28)]">
@@ -115,7 +115,7 @@ export default async function AchievementDetailPage({
                 </div>
               </Reveal>
               <Reveal delay={0.18}>
-                <h1 className="mt-6 font-display text-[3.2rem] leading-[0.88] tracking-[-0.04em] text-white sm:text-[4rem] md:text-[4.8rem] lg:text-[5.05rem]">
+                <h1 className="mt-6 font-display text-[2.6rem] leading-[0.88] tracking-[-0.04em] text-white sm:text-[3.2rem] md:text-[4rem] lg:text-[5.05rem]">
                   {title}
                 </h1>
               </Reveal>

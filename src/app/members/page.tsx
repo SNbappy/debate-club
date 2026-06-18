@@ -88,11 +88,11 @@ function MemberCard({
             ) : null}
           </div>
 
-          <div className="bg-[#FDF8EE] px-4 py-4">
-            <h2 className="font-display text-[1.75rem] leading-[0.92] tracking-tight text-[#0F1E3D]">
+          <div className="bg-[#FDF8EE] p-3 sm:px-4 sm:py-4">
+            <h2 className="font-display text-[1.4rem] leading-[0.92] tracking-tight text-[#0F1E3D] sm:text-[1.75rem]">
               {name}
             </h2>
-            <p className="mt-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#0F1E3D]/58">
+            <p className="mt-1.5 text-[10px] sm:text-[11px] sm:mt-2 font-semibold uppercase tracking-[0.22em] text-[#0F1E3D]/58">
               {role}
             </p>
           </div>
@@ -216,7 +216,7 @@ export default async function MembersPage() {
               </div>
             </Reveal>
 
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-5 sm:grid-cols-3 lg:grid-cols-4">
               {leadership.map((member, index) => (
                 <MemberCard
                   key={member.id}
@@ -245,7 +245,7 @@ export default async function MembersPage() {
           </Reveal>
 
           {generalMembers.length > 0 ? (
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-5 sm:grid-cols-3 lg:grid-cols-4">
               {generalMembers.map((member, index) => (
                 <MemberCard
                   key={member.id}

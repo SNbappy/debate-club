@@ -1,4 +1,4 @@
-﻿import { CheckCircle2, Shield, UserPlus, Users } from "lucide-react"
+import { CheckCircle2, Shield, UserPlus, Users } from "lucide-react"
 
 import { createClient } from "@/lib/supabase/server"
 import { Badge } from "@/components/ui/badge"
@@ -45,7 +45,7 @@ export default async function AdminMembersPage() {
           )}
         </div>
 
-        <div className="mt-6 grid gap-4 md:grid-cols-4">
+        <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
           <div className="rounded-[22px] border border-[#0F1E3D]/8 bg-white p-5">
             <p className="text-[11px] uppercase tracking-[0.2em] text-[#0F1E3D]/45">
               Total members

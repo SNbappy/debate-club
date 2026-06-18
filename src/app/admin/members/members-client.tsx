@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useMemo, useState, useTransition } from "react"
 import {
@@ -136,7 +136,7 @@ export function MembersClient({ profiles }: { profiles: Profile[] }) {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2 xl:justify-end">
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:mt-0 sm:flex sm:flex-wrap xl:justify-end">
             <Button
               size="sm"
               variant="outline"
