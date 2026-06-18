@@ -28,7 +28,7 @@ function initials(name: string) {
 }
 
 function getMemberHref(member: Member) {
-  return member.slug ? `/members/${member.slug}` : "#";
+  return member.slug ? `/members/${member.slug}` : `/members/${member.id}`;
 }
 
 const ROLE_LABELS: Record<string, string> = {

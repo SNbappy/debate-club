@@ -116,12 +116,20 @@ export default async function MemberProfilePage({
   const { slug } = await params
   const supabase = await createClient()
 
-  const { data: profile } = await supabase
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+
+  const query = supabase
     .from("profiles")
     .select("*")
-    .eq("slug", slug)
-    .eq("is_verified", true)
-    .maybeSingle()
+    .eq("is_verified", true);
+
+  if (isUuid) {
+    query.or(`slug.eq.${slug},id.eq.${slug}`);
+  } else {
+    query.eq("slug", slug);
+  }
+
+  const { data: profile } = await query.maybeSingle();
 
   if (!profile) notFound()
 
@@ -404,12 +412,20 @@ export async function generateMetadata({
   const { slug } = await params
   const supabase = await createClient()
 
-  const { data: profile } = await supabase
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug);
+
+  const query = supabase
     .from("profiles")
     .select("full_name, bio")
-    .eq("slug", slug)
-    .eq("is_verified", true)
-    .maybeSingle()
+    .eq("is_verified", true);
+
+  if (isUuid) {
+    query.or(`slug.eq.${slug},id.eq.${slug}`);
+  } else {
+    query.eq("slug", slug);
+  }
+
+  const { data: profile } = await query.maybeSingle();
 
   if (!profile) return { title: "Member not found" }
 
