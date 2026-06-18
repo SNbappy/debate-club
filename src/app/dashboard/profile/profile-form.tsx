@@ -17,7 +17,7 @@ import { Upload, Trash2, CheckCircle2, XCircle } from "lucide-react"
 import { cloudinaryUploadWidgetStyles } from "@/lib/cloudinary"
 
 const CURRENT_YEAR = new Date().getFullYear()
-const START_YEAR = 2015
+const START_YEAR = 2008
 
 function slugify(text: string) {
   return text
