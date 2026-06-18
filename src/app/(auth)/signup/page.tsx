@@ -115,7 +115,7 @@ export default function SignupPage() {
               {requiresEmailConfirmation ? "Verify your email" : "Create account"}
             </h2>
             <p className="mt-2 text-sm text-[#0F1E3D]/60">
-              {requiresEmailConfirmation ? "We sent a code to your email." : "Register to access the club workspace."}
+              {requiresEmailConfirmation ? "We sent an 8-digit code to your email." : "Register to access the club workspace."}
             </p>
           </div>
 

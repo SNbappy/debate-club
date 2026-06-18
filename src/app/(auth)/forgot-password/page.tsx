@@ -123,7 +123,7 @@ export default function ForgotPasswordPage() {
             </h2>
             <p className="mt-2 text-sm text-[#0F1E3D]/60">
               {step === "email" && "Enter your email address to receive a recovery code."}
-              {step === "otp" && "We sent a 6-digit recovery code to your email."}
+              {step === "otp" && "We sent an 8-digit recovery code to your email."}
               {step === "password" && "Enter your new password below."}
             </p>
           </div>
