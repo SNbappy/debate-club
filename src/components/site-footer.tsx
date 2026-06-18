@@ -107,7 +107,11 @@ export function SiteFooter() {
               className="text-[#C19A3D] hover:underline font-semibold">
               Md. Sabbir Hossain Bappy
             </a>
-            {" "}at Cyber Security Lab
+            {" "}at{" "}
+            <a href="https://nowsin.me/" target="_blank" rel="noopener noreferrer"
+              className="text-[#C19A3D] hover:underline font-semibold">
+              Cyber Security Lab
+            </a>
           </div>
         </div>
       </div>
