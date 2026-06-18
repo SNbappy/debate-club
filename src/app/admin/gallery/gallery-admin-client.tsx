@@ -1,37 +1,19 @@
 "use client"
 
-import { useMemo, useState, useTransition } from "react"
-import {
-  adminCreateAlbum,
-  adminDeleteAlbum,
-  adminUpdateAlbum,
-} from "@/lib/actions/gallery"
+import { useMemo, useTransition } from "react"
+import { adminDeleteAlbum } from "@/lib/actions/gallery"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { CldUploadWidget } from "next-cloudinary"
-import { cloudinaryUploadWidgetStyles } from "@/lib/cloudinary"
 import { toast } from "sonner"
 import Link from "next/link"
 import {
   CalendarDays,
   Check,
   ExternalLink,
-  ImagePlus,
   Images,
   Pencil,
   Plus,
   Trash2,
-  Upload,
 } from "lucide-react"
 
 export type Album = {
@@ -57,9 +39,6 @@ function formatDate(value: string | null) {
 }
 
 export function GalleryAdminClient({ albums }: { albums: Album[] }) {
-  const [open, setOpen] = useState(false)
-  const [editing, setEditing] = useState<Album | null>(null)
-  const [coverUrl, setCoverUrl] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
   const sortedAlbums = useMemo(() => {
@@ -87,49 +66,6 @@ export function GalleryAdminClient({ albums }: { albums: Album[] }) {
     () => albums.reduce((sum, album) => sum + (album.gallery_images?.[0]?.count ?? 0), 0),
     [albums]
   )
-
-  function openNew() {
-    setEditing(null)
-    setCoverUrl(null)
-    setOpen(true)
-  }
-
-  function openEdit(album: Album) {
-    setEditing(album)
-    setCoverUrl(album.cover_image_url)
-    setOpen(true)
-  }
-
-  function closeAll() {
-    setOpen(false)
-    setEditing(null)
-    setCoverUrl(null)
-  }
-
-  function handleSubmit(formData: FormData) {
-    const input = {
-      title: formData.get("title") as string,
-      slug: (formData.get("slug") as string) || undefined,
-      description: (formData.get("description") as string) || undefined,
-      event_date: (formData.get("event_date") as string) || undefined,
-      cover_image_url: coverUrl || undefined,
-      is_published: formData.get("is_published") === "on",
-    }
-
-    startTransition(async () => {
-      const result = editing
-        ? await adminUpdateAlbum(editing.id, input)
-        : await adminCreateAlbum(input)
-
-      if (result?.error) {
-        toast.error(result.error)
-        return
-      }
-
-      toast.success(editing ? "Album updated" : "Album created")
-      closeAll()
-    })
-  }
 
   function handleDelete(id: string) {
     if (!confirm("Delete this album and all its photos?")) return
@@ -249,14 +185,15 @@ export function GalleryAdminClient({ albums }: { albums: Album[] }) {
               </Link>
             ) : null}
 
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => openEdit(album)}
-              className="rounded-xl border-[#0F1E3D]/12 text-[#0F1E3D]"
-            >
-              <Pencil className="size-4" />
-            </Button>
+            <Link href={`/admin/gallery/${album.id}/edit`}>
+              <Button
+                type="button"
+                variant="outline"
+                className="rounded-xl border-[#0F1E3D]/12 text-[#0F1E3D]"
+              >
+                <Pencil className="size-4" />
+              </Button>
+            </Link>
 
             <Button
               type="button"
@@ -333,223 +270,17 @@ export function GalleryAdminClient({ albums }: { albums: Album[] }) {
             </p>
           </div>
 
-          <Button
-            type="button"
-            onClick={openNew}
-            className="rounded-xl bg-[#0F1E3D] px-5 text-white hover:bg-[#162952]"
-          >
-            <Plus className="mr-2 size-4" />
-            New album
-          </Button>
+          <Link href="/admin/gallery/new">
+            <Button
+              type="button"
+              className="rounded-xl bg-[#0F1E3D] px-5 text-white hover:bg-[#162952]"
+            >
+              <Plus className="mr-2 size-4" />
+              New album
+            </Button>
+          </Link>
         </div>
       </section>
-
-      <Dialog
-        open={open}
-        modal={false}
-        onOpenChange={(nextOpen) => {
-          if (!nextOpen) closeAll()
-          else setOpen(true)
-        }}
-      >
-        <DialogContent
-          className="max-w-2xl border-[#0F1E3D]/10 bg-[#FFFCF6] p-0 shadow-[0_24px_70px_rgba(15,30,61,0.16)]"
-          onInteractOutside={(e) => e.preventDefault()}
-          onPointerDownOutside={(e) => e.preventDefault()}
-          onEscapeKeyDown={(e) => e.preventDefault()}
-        >
-          <div className="overflow-hidden rounded-[1.5rem]">
-            <div className="border-b border-[#0F1E3D]/10 bg-[#0F1E3D] px-6 py-5 text-white">
-              <DialogHeader>
-                <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
-                  {editing ? "Album editing" : "Album creation"}
-                </div>
-                <DialogTitle className="mt-2 text-left text-[1.75rem] font-semibold leading-none tracking-[-0.03em] text-white">
-                  {editing ? "Refine album details" : "Create a new album"}
-                </DialogTitle>
-              </DialogHeader>
-            </div>
-
-            <form
-              key={editing?.id ?? "new"}
-              action={handleSubmit}
-              className="space-y-5 px-6 py-6"
-            >
-              <div className="grid gap-5 md:grid-cols-[1fr_0.92fr]">
-                <div className="space-y-5">
-                  <div className="space-y-2">
-                    <Label htmlFor="title" className="text-[#0F1E3D]">
-                      Title
-                    </Label>
-                    <Input
-                      id="title"
-                      name="title"
-                      required
-                      defaultValue={editing?.title ?? ""}
-                      className="h-11 rounded-xl border-[#0F1E3D]/12 bg-white"
-                    />
-                  </div>
-
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="slug" className="text-[#0F1E3D]">
-                        Slug
-                      </Label>
-                      <Input
-                        id="slug"
-                        name="slug"
-                        defaultValue={editing?.slug ?? ""}
-                        placeholder="auto-generated"
-                        className="h-11 rounded-xl border-[#0F1E3D]/12 bg-white"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="event_date" className="text-[#0F1E3D]">
-                        Event date
-                      </Label>
-                      <Input
-                        id="event_date"
-                        name="event_date"
-                        type="date"
-                        defaultValue={editing?.event_date ?? ""}
-                        className="h-11 rounded-xl border-[#0F1E3D]/12 bg-white"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="description" className="text-[#0F1E3D]">
-                      Description
-                    </Label>
-                    <Textarea
-                      id="description"
-                      name="description"
-                      rows={5}
-                      defaultValue={editing?.description ?? ""}
-                      className="rounded-xl border-[#0F1E3D]/12 bg-white"
-                      placeholder="Short editorial summary for the public album page"
-                    />
-                  </div>
-
-                  <label className="flex items-center gap-3 rounded-2xl border border-[#0F1E3D]/10 bg-white px-4 py-3">
-                    <input
-                      type="checkbox"
-                      id="is_published"
-                      name="is_published"
-                      defaultChecked={editing?.is_published ?? false}
-                      className="size-4 accent-[#0F1E3D]"
-                    />
-                    <span>
-                      <span className="block text-sm font-semibold text-[#0F1E3D]">
-                        Publish album
-                      </span>
-                      <span className="block text-xs text-[#0F1E3D]/60">
-                        Published albums become available on the public gallery.
-                      </span>
-                    </span>
-                  </label>
-                </div>
-
-                <div className="space-y-3">
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
-                    Cover image
-                  </div>
-
-                  <div className="overflow-hidden rounded-[1.4rem] border border-[#0F1E3D]/10 bg-white">
-                    <div className="aspect-[4/3] bg-[#F4ECDD]">
-                      {coverUrl ? (
-                        <img
-                          src={coverUrl}
-                          alt="Album cover preview"
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-[#0F1E3D]/35">
-                          <div className="text-center">
-                            <ImagePlus className="mx-auto size-8" />
-                            <div className="mt-3 text-xs font-medium uppercase tracking-[0.18em]">
-                              No cover selected
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-wrap gap-2 border-t border-[#0F1E3D]/10 p-3">
-                      <CldUploadWidget
-                        uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
-                        options={{
-                          maxFiles: 10,
-                          clientAllowedFormats: ["png", "jpg", "jpeg", "webp"],
-                          maxFileSize: 10000000,
-                          styles: cloudinaryUploadWidgetStyles,
-                        }}
-                        onSuccess={(result) => {
-                          const info = result.info
-                          if (
-                            info &&
-                            typeof info === "object" &&
-                            "secure_url" in info &&
-                            typeof info.secure_url === "string"
-                          ) {
-                            setCoverUrl(info.secure_url)
-                          }
-                        }}
-                      >
-                        {({ open }) => (
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => open?.()}
-                            className="rounded-xl border-[#0F1E3D]/12"
-                          >
-                            <Upload className="mr-2 size-4" />
-                            {coverUrl ? "Replace cover" : "Upload cover"}
-                          </Button>
-                        )}
-                      </CldUploadWidget>
-
-                      {coverUrl ? (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => setCoverUrl(null)}
-                          className="rounded-xl border-[#0F1E3D]/12"
-                        >
-                          Remove
-                        </Button>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  <div className="rounded-2xl border border-[#0F1E3D]/10 bg-white px-4 py-3 text-sm leading-6 text-[#0F1E3D]/64">
-                    Use a strong horizontal image here. The album card should feel polished and
-                    recognizable before someone enters the photo manager.
-                  </div>
-                </div>
-              </div>
-
-              <DialogFooter className="gap-2 border-t border-[#0F1E3D]/10 pt-5">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={closeAll}
-                  className="rounded-xl border-[#0F1E3D]/12"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={isPending}
-                  className="rounded-xl bg-[#0F1E3D] px-5 text-white hover:bg-[#162952]"
-                >
-                  {isPending ? "Saving..." : editing ? "Update album" : "Create album"}
-                </Button>
-              </DialogFooter>
-            </form>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       {sortedAlbums.length === 0 ? (
         <div className="rounded-[24px] border border-dashed border-[#0F1E3D]/15 bg-white p-10 text-center">

@@ -1,12 +1,14 @@
-﻿"use client"
+"use client"
 
 import { AnimatePresence, motion } from "motion/react"
 import { useEffect, useState } from "react"
 
 const slides = [
-  "/images/home/hero-1.jpg",
+  "/images/home/hero-1.webp",
   "/images/home/hero-2.jpg",
-  "/images/home/hero-3.jpg",
+  "/images/home/hero-3.webp",
+  "/images/home/hero-4.webp",
+  "/images/home/hero-5.webp",
 ]
 
 export function HeroSlider() {
@@ -39,7 +41,7 @@ export function HeroSlider() {
               className="h-full w-full object-cover object-center sm:object-top"
               style={{ willChange: "auto" }}
               onError={(e) => {
-                ;(e.currentTarget as HTMLImageElement).src = "/images/home/hero-1.jpg"
+                ;(e.currentTarget as HTMLImageElement).src = "/images/home/hero-1.webp"
               }}
             />
           </motion.div>

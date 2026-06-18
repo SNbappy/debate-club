@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { CertCopyButton } from "./cert-copy-button"
+import { FilePreviewModal } from "@/components/file-preview-modal"
 
 export default async function MyCertificatesPage() {
   const supabase = await createClient()
@@ -101,7 +102,7 @@ export default async function MyCertificatesPage() {
                     <CertCopyButton certificateId={c.certificate_id} />
 
                     {c.file_url && (
-                      <a href={c.file_url} target="_blank" rel="noopener noreferrer">
+                      <FilePreviewModal url={c.file_url}>
                         <Button
                           size="sm"
                           variant="outline"
@@ -109,7 +110,7 @@ export default async function MyCertificatesPage() {
                         >
                           <Download className="size-4" />
                         </Button>
-                      </a>
+                      </FilePreviewModal>
                     )}
 
                     <Link href={`/verify/${c.certificate_id}`} target="_blank">

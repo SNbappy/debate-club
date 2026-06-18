@@ -1,9 +1,10 @@
-﻿import { createClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Check, X, Download, ArrowLeft } from "lucide-react"
+import { FilePreviewModal } from "@/components/file-preview-modal"
 
 export default async function VerifyPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -69,9 +70,9 @@ export default async function VerifyPage({ params }: { params: Promise<{ id: str
               )}
             </div>
             <div className="pt-2">
-              <a href={cert.file_url} target="_blank" rel="noopener noreferrer">
-                <Button><Download className="size-4 mr-2" />View / Download</Button>
-              </a>
+              <FilePreviewModal url={cert.file_url}>
+                <Button><Download className="size-4 mr-2" />View File Preview</Button>
+              </FilePreviewModal>
             </div>
           </CardContent>
         </Card>

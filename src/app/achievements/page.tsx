@@ -51,7 +51,7 @@ export default async function AchievementsPage({
     query = query.eq("category", category as "speaker_award" | "adjudication_award" | "team_result" | "training_conducted" | "other")
   }
 
-  const { data: rawAchievements } = await query.order("created_at", { ascending: false })
+  const { data: rawAchievements } = await query.order("achievement_date", { ascending: false, nullsFirst: false })
   const achievements = (rawAchievements ?? []) as unknown as Achievement[]
 
 
