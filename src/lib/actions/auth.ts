@@ -1,4 +1,4 @@
-﻿"use server"
+"use server"
 
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
@@ -127,4 +127,70 @@ export async function signOut() {
   await supabase.auth.signOut()
   revalidatePath("/", "layout")
   redirect("/")
+}
+
+export async function verifyOtp(formData: FormData): Promise<ActionResult> {
+  const email = String(formData.get("email") ?? "").trim()
+  const token = String(formData.get("token") ?? "").trim()
+  const type = String(formData.get("type") ?? "") as "signup" | "recovery"
+
+  if (!email || !token || !type) {
+    return { error: "Missing required fields." }
+  }
+
+  const supabase = await createClient()
+  const { error } = await supabase.auth.verifyOtp({
+    email,
+    token,
+    type,
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  if (type === "signup") {
+    revalidatePath("/", "layout")
+    redirect("/dashboard")
+  }
+
+  return { success: "OTP verified successfully." }
+}
+
+export async function sendPasswordResetOtp(formData: FormData): Promise<ActionResult> {
+  const email = String(formData.get("email") ?? "").trim()
+
+  if (!email) {
+    return { error: "Email is required." }
+  }
+
+  const supabase = await createClient()
+  const { error } = await supabase.auth.resetPasswordForEmail(email)
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { success: "Password reset code sent to your email." }
+}
+
+export async function updatePassword(formData: FormData): Promise<ActionResult> {
+  const password = String(formData.get("password") ?? "")
+
+  const parsed = passwordSchema.safeParse(password)
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Invalid password." }
+  }
+
+  const supabase = await createClient()
+  const { error } = await supabase.auth.updateUser({
+    password,
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath("/", "layout")
+  redirect("/dashboard")
 }

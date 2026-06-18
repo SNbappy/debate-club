@@ -31,8 +31,19 @@ function getMemberHref(member: Member) {
   return member.slug ? `/members/${member.slug}` : "#";
 }
 
+const ROLE_LABELS: Record<string, string> = {
+  member: "Member",
+  executive: "Executive",
+  general_secretary: "General Secretary",
+  president: "President",
+  alumni: "Alumni",
+};
+
 function getDisplayRole(member: Member) {
-  return normalizeText(member.exec_position) || normalizeText(member.role) || "Member";
+  const execPos = normalizeText(member.exec_position);
+  if (execPos) return execPos;
+  const role = normalizeText(member.role);
+  return ROLE_LABELS[role] || role || "Member";
 }
 
 function getAvatar(member: Member) {
@@ -117,8 +128,31 @@ export default async function MembersPage() {
   }
 
   const members = (data ?? []) as Member[];
-  const leadership = members.filter((member) => normalizeText(member.exec_position));
-  const generalMembers = members.filter((member) => !normalizeText(member.exec_position));
+
+  const isLeadership = (m: Member) => 
+    ["president", "general_secretary", "executive"].includes(m.role || "") || 
+    normalizeText(m.exec_position).length > 0;
+
+  const getRoleWeight = (role: string | null) => {
+    if (role === "president") return 1;
+    if (role === "general_secretary") return 2;
+    if (role === "executive") return 3;
+    return 4;
+  };
+
+  const rawLeadership = members.filter(isLeadership);
+  const leadership = rawLeadership.sort((a, b) => {
+    const weightA = getRoleWeight(a.role);
+    const weightB = getRoleWeight(b.role);
+    if (weightA !== weightB) {
+      return weightA - weightB;
+    }
+    const nameA = normalizeText(a.full_name);
+    const nameB = normalizeText(b.full_name);
+    return nameA.localeCompare(nameB);
+  });
+
+  const generalMembers = members.filter((m) => !isLeadership(m));
 
   return (
     <main className="bg-white text-[#0F1E3D]">
