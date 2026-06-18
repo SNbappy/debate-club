@@ -135,8 +135,8 @@ export default function SignupPage() {
                     id="token"
                     name="token"
                     type="text"
-                    maxLength={6}
-                    placeholder="000000"
+                    maxLength={8}
+                    placeholder="00000000"
                     required
                     className="h-14 border-[#0F1E3D]/12 bg-[#EEF2F6] text-[#0F1E3D] text-center text-xl tracking-[0.4em] rounded-xl focus-visible:ring-[#C19A3D]/30 focus-visible:border-[#C19A3D] transition-all"
                   />
