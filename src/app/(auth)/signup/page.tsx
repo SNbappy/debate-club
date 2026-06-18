@@ -123,7 +123,7 @@ export default function SignupPage() {
             <div className="space-y-6">
               <div className="rounded-[1rem] border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm leading-6 text-emerald-700">
                 <p className="font-semibold">Check your email</p>
-                <p className="mt-1">We sent a 6-digit code to <strong>{emailToVerify}</strong>.</p>
+                <p className="mt-1">We sent an 8-digit code to <strong>{emailToVerify}</strong>.</p>
               </div>
 
               <form action={handleVerifyOtp} className="space-y-5">
