@@ -129,9 +129,13 @@ export default async function MembersPage() {
 
   const members = (data ?? []) as Member[];
 
+  const isAlumni = (m: Member) => m.role === "alumni";
+  
   const isLeadership = (m: Member) => 
-    ["president", "general_secretary", "executive"].includes(m.role || "") || 
-    normalizeText(m.exec_position).length > 0;
+    !isAlumni(m) && (
+      ["president", "general_secretary", "executive"].includes(m.role || "") || 
+      normalizeText(m.exec_position).length > 0
+    );
 
   const getRoleWeight = (role: string | null) => {
     if (role === "president") return 1;
@@ -152,7 +156,8 @@ export default async function MembersPage() {
     return nameA.localeCompare(nameB);
   });
 
-  const generalMembers = members.filter((m) => !isLeadership(m));
+  const alumni = members.filter(isAlumni);
+  const generalMembers = members.filter((m) => !isLeadership(m) && !isAlumni(m));
 
   return (
     <main className="bg-white text-[#0F1E3D]">
@@ -184,7 +189,6 @@ export default async function MembersPage() {
               <div className="max-w-4xl">
                 <Reveal>
                   <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-4 py-2 text-[11px] uppercase tracking-[0.24em] text-white/90 backdrop-blur-md md:text-xs">
-                    {/* <Sparkles className="size-3 text-[#C19A3D]" /> */}
                     Members Directory
                   </div>
                 </Reveal>
@@ -203,33 +207,6 @@ export default async function MembersPage() {
                   </p>
                 </Reveal>
               </div>
-
-              {/* <Reveal delay={0.42}>
-                <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
-                  <div className="rounded-[1.3rem] border border-white/10 bg-white/7 px-5 py-5 backdrop-blur-md">
-                    <div className="mb-2 flex items-center gap-2 text-[#C19A3D]">
-                      <Users className="size-4" />
-                      <span className="text-[11px] font-semibold uppercase tracking-[0.24em]">Members</span>
-                    </div>
-                    <div className="text-3xl font-bold text-white">{members.length}</div>
-                  </div>
-
-                  <div className="rounded-[1.3rem] border border-white/10 bg-white/7 px-5 py-5 backdrop-blur-md">
-                    <div className="mb-2 flex items-center gap-2 text-[#C19A3D]">
-                      <Award className="size-4" />
-                      <span className="text-[11px] font-semibold uppercase tracking-[0.24em]">Leadership</span>
-                    </div>
-                    <div className="text-3xl font-bold text-white">{leadership.length}</div>
-                  </div>
-
-                  <div className="rounded-[1.3rem] border border-white/10 bg-white/7 px-5 py-5 backdrop-blur-md">
-                    <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-[#C19A3D]">
-                      Layout
-                    </div>
-                    <div className="text-3xl font-bold text-white">4-up</div>
-                  </div>
-                </div>
-              </Reveal> */}
             </div>
           </div>
         </div>
@@ -264,8 +241,36 @@ export default async function MembersPage() {
         </section>
       ) : null}
 
-      <section className="relative overflow-hidden bg-white py-14 sm:py-18 md:py-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_22%,rgba(193,154,61,0.08),transparent_24%),radial-gradient(circle_at_84%_78%,rgba(15,30,61,0.05),transparent_22%)]" />
+      {alumni.length > 0 ? (
+        <section className="relative overflow-hidden bg-white py-14 sm:py-18 md:py-20">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_86%_22%,rgba(193,154,61,0.06),transparent_24%),radial-gradient(circle_at_14%_78%,rgba(15,30,61,0.04),transparent_22%)]" />
+          <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
+            <Reveal>
+              <div className="mb-8">
+                <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-[#C19A3D]">
+                  Legacy
+                </div>
+                <h2 className="font-display text-[1.9rem] font-bold leading-[0.96] tracking-tight text-[#0F1E3D] sm:text-4xl md:text-5xl">
+                  Alumni
+                </h2>
+              </div>
+            </Reveal>
+
+            <div className="grid grid-cols-2 gap-3 sm:gap-5 sm:grid-cols-3 lg:grid-cols-4">
+              {alumni.map((member, index) => (
+                <MemberCard
+                  key={member.id}
+                  member={member}
+                  delay={0.03 + index * 0.02}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      <section className="relative overflow-hidden bg-[#FDF8EE] py-14 sm:py-18 md:py-20 border-t border-[#0F1E3D]/5">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_22%,rgba(193,154,61,0.06),transparent_24%),radial-gradient(circle_at_84%_78%,rgba(15,30,61,0.04),transparent_22%)]" />
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
           <Reveal>
             <div className="mb-8">
@@ -290,7 +295,7 @@ export default async function MembersPage() {
             </div>
           ) : (
             <Reveal delay={0.08}>
-              <div className="rounded-[1.6rem] border border-[#0F1E3D]/10 bg-[#FDF8EE] p-8 text-center">
+              <div className="rounded-[1.6rem] border border-[#0F1E3D]/10 bg-white p-8 text-center">
                 <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#C19A3D]">
                   Directory
                 </div>
