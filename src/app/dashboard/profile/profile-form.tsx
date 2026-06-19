@@ -32,7 +32,7 @@ function slugify(text: string) {
 
 function generateSessionOptions() {
   const options: { value: string; label: string }[] = []
-  for (let year = CURRENT_YEAR + 1; year >= START_YEAR; year--) {
+  for (let year = CURRENT_YEAR; year >= START_YEAR; year--) {
     const shortNext = String(year + 1).slice(-2)
     options.push({ value: String(year), label: `${year}-${shortNext}` })
   }
@@ -41,7 +41,7 @@ function generateSessionOptions() {
 
 function generateYearOptions() {
   const options: { value: string; label: string }[] = []
-  for (let year = CURRENT_YEAR + 1; year >= START_YEAR; year--) {
+  for (let year = CURRENT_YEAR; year >= START_YEAR; year--) {
     options.push({ value: String(year), label: String(year) })
   }
   return options
